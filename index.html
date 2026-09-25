@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tas'heel Plus Loan Calculator - Ministry Housing Subsidy & Financing Model</title>
-  <meta name="description" content="Calculate your Tas'heel Plus upfront lump-sum government grant, bank financed principal balance, SLRB fees, and tiered monthly installment schedule." />
+  <title>Tas'heel Plus Loan Calculator - Ministry Housing Subsidy & Dual Loan Comparison</title>
+  <meta name="description" content="Calculate your Tas'heel Plus upfront lump-sum government grant, bank financed principal balance, SLRB fees, and compare combined repayment with a second loan." />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,7 +54,7 @@
           class="flex items-center space-x-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95"
         >
           <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
-          <span>Load Example (BD 600 Salary)</span>
+          <span>Load Example (BD 600 Salary + 30k 2nd Loan)</span>
         </button>
       </div>
     </header>
@@ -153,7 +154,7 @@
           <!-- Loan Tenure -->
           <div>
             <label for="tenureYears" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-              Loan Term
+              Primary Housing Loan Term
             </label>
             <select
               id="tenureYears"
@@ -203,6 +204,88 @@
               />
             </div>
           </div>
+
+          <!-- SECOND LOAN SECTION (COMPARISON FEATURE) -->
+          <div class="border-t border-slate-700/60 pt-5">
+            <div class="flex items-center justify-between">
+              <label for="chkIncludeSecondLoan" class="cursor-pointer flex items-center space-x-2.5 select-none">
+                <input
+                  id="chkIncludeSecondLoan"
+                  type="checkbox"
+                  class="w-4 h-4 text-blue-600 bg-slate-900 border-slate-700 rounded focus:ring-blue-500 cursor-pointer"
+                />
+                <span class="text-xs font-bold text-slate-200">Include Second Loan</span>
+              </label>
+              <span class="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                Comparison Mode
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">Plan a second personal or commercial top-up loan to compare total monthly payment burden.</p>
+
+            <div id="secondLoanContainer" class="hidden space-y-4 mt-4 p-4 bg-slate-900/90 rounded-2xl border border-slate-700/80 shadow-inner">
+              <!-- Second Loan Amount -->
+              <div>
+                <label for="loan2Amount" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  Second Loan Amount
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold text-xs">BD</span>
+                  <input
+                    id="loan2Amount"
+                    type="number"
+                    value="30000"
+                    step="500"
+                    min="1000"
+                    max="100000"
+                    class="w-full pl-10 pr-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                  />
+                </div>
+              </div>
+
+              <!-- Second Loan Rate -->
+              <div>
+                <label for="loan2Rate" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  Interest Rate (APR)
+                </label>
+                <div class="relative">
+                  <input
+                    id="loan2Rate"
+                    type="number"
+                    value="4.0"
+                    step="0.1"
+                    min="0.0"
+                    max="15.0"
+                    class="w-full pr-8 pl-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                  />
+                  <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 font-semibold text-xs">%</span>
+                </div>
+              </div>
+
+              <!-- Second Loan Tenure -->
+              <div>
+                <label for="loan2TenureYears" class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  Loan Term
+                </label>
+                <select
+                  id="loan2TenureYears"
+                  class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                >
+                  <option value="3">3 Years (36 Months)</option>
+                  <option value="5">5 Years (60 Months)</option>
+                  <option value="7" selected>7 Years (84 Months)</option>
+                  <option value="10">10 Years (120 Months)</option>
+                  <option value="15">15 Years (180 Months)</option>
+                </select>
+              </div>
+
+              <!-- Second Loan PMT Badge -->
+              <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-center">
+                <span class="text-[10px] text-amber-200/80 block font-medium">Second Loan Monthly Payment</span>
+                <span id="secondLoanPmtBadge" class="text-sm font-bold text-amber-400 font-mono mt-0.5 block">BD 410.06 /mo</span>
+                <span id="secondLoanTermBadge" class="text-[10px] text-slate-400 block mt-0.5">for 7 Years (84 Months)</span>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -228,7 +311,7 @@
             </div>
 
             <div class="w-full md:w-auto bg-slate-900/80 backdrop-blur-md rounded-2xl p-5 border border-white/10 text-left md:text-right flex-shrink-0 shadow-inner">
-              <span class="text-xs font-medium text-slate-400 block uppercase tracking-wider">Bank Financed Principal</span>
+              <span class="text-xs font-medium text-slate-400 block uppercase tracking-wider">Primary Bank Financed Principal</span>
               <span class="text-2xl sm:text-3xl font-extrabold text-white font-mono block mt-1" id="netFinancedBalance">
                 BD 34,653.764
               </span>
@@ -239,15 +322,48 @@
           </div>
         </div>
 
+        <!-- SECOND LOAN COMPARISON BANNER (Visible when Second Loan is ON) -->
+        <div id="secondLoanComparisonBanner" class="hidden bg-gradient-to-r from-amber-900/60 via-slate-800 to-slate-900 rounded-3xl p-6 border border-amber-500/30 shadow-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-amber-500/20 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i>
+              <h3 class="text-sm sm:text-base font-bold text-amber-300">Dual Loan Combined Outflow Summary</h3>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Active Comparison
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/60">
+              <span class="text-[11px] text-slate-400 font-medium block">Second Loan Payment</span>
+              <span class="text-xl font-bold text-amber-400 font-mono mt-1 block" id="bannerSecondLoanPmt">BD 410.06 /mo</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5" id="bannerSecondLoanTerm">Years 1 – 7 (84 months)</span>
+            </div>
+
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/60">
+              <span class="text-[11px] text-slate-400 font-medium block">Combined Debt Principal</span>
+              <span class="text-xl font-bold text-white font-mono mt-1 block" id="bannerCombinedPrincipal">BD 64,653.76</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">Primary + Second Loan</span>
+            </div>
+
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700/60">
+              <span class="text-[11px] text-slate-400 font-medium block">Combined Total Interest</span>
+              <span class="text-xl font-bold text-rose-400 font-mono mt-1 block" id="bannerCombinedInterest">BD 45,391.63</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">Primary + Second Interest</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Tiered Repayment Cards -->
         <div class="bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-700/60 shadow-xl">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-700/60 gap-2">
             <div>
-              <h2 class="text-base font-bold text-white">Tiered Repayment Schedule & Monthly Subsidy</h2>
-              <p class="text-xs text-slate-400">Monthly installment paid by applicant vs. Ministry monthly subsidy</p>
+              <h2 class="text-base font-bold text-white" id="repaymentCardsHeading">Tiered Monthly Repayments</h2>
+              <p class="text-xs text-slate-400" id="repaymentCardsSubheading">Monthly installment paid by applicant vs. Ministry monthly subsidy</p>
             </div>
             <span class="self-start sm:self-auto text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              Total Installment to Bank: <strong id="totalMonthlyInstallmentBadge" class="text-white font-mono">BD 210.00</strong>/mo
+              Primary Installment to Bank: <strong id="totalMonthlyInstallmentBadge" class="text-white font-mono">BD 210.00</strong>/mo
             </span>
           </div>
 
@@ -261,17 +377,17 @@
                 </div>
                 <div class="mt-3">
                   <div class="text-2xl font-black text-white font-mono" id="cardPhase1Pay">BD 150.00</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5" id="cardPhase1Subtext">Your primary payment</div>
                 </div>
               </div>
               <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
-                <div class="flex justify-between text-emerald-400">
+                <div class="flex justify-between text-emerald-400" id="cardPhase1GovRow">
                   <span>Gov Subsidy:</span>
                   <span id="cardPhase1Gov" class="font-bold">BD 60.00 /mo</span>
                 </div>
-                <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
-                  <span>Total to Bank:</span>
-                  <span id="cardPhase1TotalPmt" class="font-mono">BD 210.00</span>
+                <div class="flex justify-between text-amber-300 font-bold pt-1 border-t border-slate-800" id="cardPhase1CombinedRow">
+                  <span id="cardPhase1CombinedLabel">Total Outflow:</span>
+                  <span id="cardPhase1CombinedVal" class="font-mono">BD 150.00</span>
                 </div>
               </div>
             </div>
@@ -285,17 +401,17 @@
                 </div>
                 <div class="mt-3">
                   <div class="text-2xl font-black text-white font-mono" id="cardPhase2Pay">BD 180.00</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5" id="cardPhase2Subtext">Your primary payment</div>
                 </div>
               </div>
               <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
-                <div class="flex justify-between text-emerald-400">
+                <div class="flex justify-between text-emerald-400" id="cardPhase2GovRow">
                   <span>Gov Subsidy:</span>
                   <span id="cardPhase2Gov" class="font-bold">BD 30.00 /mo</span>
                 </div>
-                <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
-                  <span>Total to Bank:</span>
-                  <span id="cardPhase2TotalPmt" class="font-mono">BD 210.00</span>
+                <div class="flex justify-between text-amber-300 font-bold pt-1 border-t border-slate-800" id="cardPhase2CombinedRow">
+                  <span id="cardPhase2CombinedLabel">Total Outflow:</span>
+                  <span id="cardPhase2CombinedVal" class="font-mono">BD 180.00</span>
                 </div>
               </div>
             </div>
@@ -309,17 +425,17 @@
                 </div>
                 <div class="mt-3">
                   <div class="text-2xl font-black text-white font-mono" id="cardPhase3Pay">BD 210.00</div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5" id="cardPhase3Subtext">Your primary payment</div>
                 </div>
               </div>
               <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
-                <div class="flex justify-between text-slate-400">
+                <div class="flex justify-between text-slate-400" id="cardPhase3GovRow">
                   <span>Gov Subsidy:</span>
                   <span id="cardPhase3Gov" class="font-bold">BD 0.00 /mo</span>
                 </div>
-                <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
-                  <span>Total to Bank:</span>
-                  <span id="cardPhase3TotalPmt" class="font-mono">BD 210.00</span>
+                <div class="flex justify-between text-amber-300 font-bold pt-1 border-t border-slate-800" id="cardPhase3CombinedRow">
+                  <span id="cardPhase3CombinedLabel">Total Outflow:</span>
+                  <span id="cardPhase3CombinedVal" class="font-mono">BD 210.00</span>
                 </div>
               </div>
             </div>
@@ -336,7 +452,7 @@
               <span class="text-sm font-bold text-amber-400 font-mono mt-0.5 block" id="metricSlrbFee">BD 1,200.00</span>
             </div>
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
-              <span class="text-[11px] text-slate-400 font-semibold block">Total Bank Interest Paid</span>
+              <span class="text-[11px] text-slate-400 font-semibold block" id="labelMetricInterest">Total Interest Paid</span>
               <span class="text-sm font-bold text-rose-400 font-mono mt-0.5 block" id="metricInterestPaid">BD 40,946.24</span>
             </div>
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
@@ -351,7 +467,7 @@
           <div class="flex items-center justify-between mb-4">
             <div>
               <h2 class="text-base font-bold text-white">Loan Amortization & Balance Trajectory</h2>
-              <p class="text-xs text-slate-400">Remaining bank loan balance reduction over time</p>
+              <p class="text-xs text-slate-400" id="chartSubheading">Remaining bank loan balance reduction over time</p>
             </div>
           </div>
           <div class="h-64 sm:h-72">
@@ -359,51 +475,53 @@
           </div>
         </div>
 
-        <!-- Detailed Amortization Table -->
+        <!-- Detailed Amortization Table (Expanded Height & High Readability) -->
         <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-700/60 shadow-xl overflow-hidden">
-          <div class="p-5 border-b border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="p-6 border-b border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 class="text-base font-bold text-white">Amortization Schedule</h3>
-              <p class="text-xs text-slate-400">Detailed repayment breakdown per period</p>
+              <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                <i data-lucide="table" class="w-5 h-5 text-blue-400"></i>
+                <span>Amortization Schedule</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Detailed period-by-period repayment breakdown</p>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="flex flex-wrap items-center gap-2">
               <button
                 id="viewAnnualBtn"
-                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition"
+                class="px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 text-white shadow-md transition"
               >
                 Annual Summary
               </button>
               <button
                 id="viewMonthlyBtn"
-                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition"
+                class="px-4 py-2 text-xs font-bold rounded-xl text-slate-300 hover:bg-slate-700 transition"
               >
                 Monthly Schedule
               </button>
               <button
-                id="exportCsvBtn"
-                class="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-semibold border border-slate-600 rounded-lg hover:bg-slate-700 text-slate-200 transition"
+                id="exportExcelBtn"
+                class="flex items-center space-x-2 px-4 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-md shadow-emerald-600/20 transition active:scale-95"
               >
-                <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                <span>Export CSV</span>
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                <span>Export Excel (.xlsx)</span>
               </button>
             </div>
           </div>
 
-          <div class="overflow-x-auto max-h-96">
-            <table class="w-full text-left text-xs text-slate-300 border-collapse">
-              <thead class="bg-slate-900/90 text-slate-400 uppercase font-semibold border-b border-slate-700/80 sticky top-0 backdrop-blur-md">
+          <div class="overflow-x-auto max-h-[650px] scrollbar-thin scrollbar-thumb-slate-700">
+            <table class="w-full text-left text-sm text-slate-200 border-collapse min-w-[1050px]">
+              <thead id="scheduleTableHeader" class="bg-slate-900/95 text-slate-300 text-xs uppercase font-bold tracking-wider border-b-2 border-slate-700 sticky top-0 backdrop-blur-md z-10">
                 <tr>
-                  <th class="py-3.5 px-4">Period</th>
-                  <th class="py-3.5 px-4">Beginning Balance</th>
-                  <th class="py-3.5 px-4">Total Payment</th>
-                  <th class="py-3.5 px-4">Your Share</th>
-                  <th class="py-3.5 px-4">Gov Subsidy</th>
-                  <th class="py-3.5 px-4">Interest Paid</th>
-                  <th class="py-3.5 px-4">Principal Repaid</th>
-                  <th class="py-3.5 px-4">Ending Balance</th>
+                  <th class="py-4 px-5">Period</th>
+                  <th class="py-4 px-5">Beg Balance</th>
+                  <th class="py-4 px-5">Primary Pmt</th>
+                  <th class="py-4 px-5">Gov Subsidy</th>
+                  <th class="py-4 px-5">Interest Paid</th>
+                  <th class="py-4 px-5">Principal Repaid</th>
+                  <th class="py-4 px-5">End Balance</th>
                 </tr>
               </thead>
-              <tbody id="scheduleTableBody" class="divide-y divide-slate-700/40 font-mono">
+              <tbody id="scheduleTableBody" class="divide-y divide-slate-700/50 font-mono text-sm">
                 <!-- Dynamically populated rows -->
               </tbody>
             </table>
@@ -415,7 +533,7 @@
   </div>
 
   <script>
-    // App State initialized with BD 600 salary example values
+    // App State
     let state = {
       salary: 600,
       option: 2,
@@ -423,7 +541,13 @@
       tenureYears: 30,
       interestRate: 6.10,
       slrbFee: 1200,
-      viewMode: 'annual'
+      viewMode: 'annual',
+      
+      // Second Loan Comparison State
+      includeSecondLoan: false,
+      loan2Amount: 30000,
+      loan2Rate: 4.0,
+      loan2TenureYears: 7
     };
 
     let chartInstance = null;
@@ -432,6 +556,12 @@
     function calculatePV(ratePerPeriod, periods, payment) {
       if (ratePerPeriod === 0) return payment * periods;
       return payment * ((1 - Math.pow(1 + ratePerPeriod, -periods)) / ratePerPeriod);
+    }
+
+    // Helper: Monthly payment for standard annuity
+    function calculatePMT(ratePerPeriod, periods, principal) {
+      if (ratePerPeriod === 0) return principal / periods;
+      return principal * (ratePerPeriod * Math.pow(1 + ratePerPeriod, periods)) / (Math.pow(1 + ratePerPeriod, periods) - 1);
     }
 
     // Return the max repayment percentage based on Option tier
@@ -457,7 +587,7 @@
       const months = state.tenureYears * 12;
       const monthlyRate = state.interestRate / 100 / 12;
 
-      // Total monthly installment sent to the bank (based on max tier capability)
+      // Primary loan total monthly installment sent to the bank
       const maxTierPct = getMaxTierPercentage(state.option);
       const totalMonthlyPayment = state.salary * maxTierPct;
 
@@ -468,54 +598,109 @@
       let upfrontGrant = state.totalFinance - netFinancedAmount;
       if (upfrontGrant < 0) upfrontGrant = 0;
 
-      // Build month-by-month schedule
-      let balance = netFinancedAmount;
+      // Second loan PMT
+      const months2 = state.loan2TenureYears * 12;
+      const r2 = (state.loan2Rate / 100) / 12;
+      const secondLoanPMT = state.includeSecondLoan ? calculatePMT(r2, months2, state.loan2Amount) : 0;
+
+      // Build month-by-month schedule for both loans
+      let balance1 = netFinancedAmount;
+      let balance2 = state.includeSecondLoan ? state.loan2Amount : 0;
       const schedule = [];
 
       for (let m = 1; m <= months; m++) {
         const year = Math.ceil(m / 12);
         
         const borrowerPct = getBorrowerTierPercentage(state.option, year);
-        const borrowerPmt = state.salary * borrowerPct;
-        const govSubsidyPmt = Math.max(0, totalMonthlyPayment - borrowerPmt);
+        const borrowerPmt1 = state.salary * borrowerPct;
+        const govSubsidyPmt1 = Math.max(0, totalMonthlyPayment - borrowerPmt1);
 
-        const begBalance = balance;
-        const interest = balance * monthlyRate;
-        let principal = totalMonthlyPayment - interest;
+        const begBalance1 = balance1;
+        const interest1 = balance1 * monthlyRate;
+        let principal1 = totalMonthlyPayment - interest1;
 
-        // Final period balance cleanup
-        if (m === months || balance - principal < 0) {
-          principal = balance;
-          balance = 0;
+        if (m === months || balance1 - principal1 < 0) {
+          principal1 = balance1;
+          balance1 = 0;
         } else {
-          balance -= principal;
+          balance1 -= principal1;
         }
+
+        // Second Loan details
+        let begBalance2 = 0;
+        let pmt2 = 0;
+        let interest2 = 0;
+        let principal2 = 0;
+
+        if (state.includeSecondLoan && m <= months2) {
+          begBalance2 = balance2;
+          pmt2 = secondLoanPMT;
+          interest2 = balance2 * r2;
+          principal2 = pmt2 - interest2;
+          if (m === months2 || balance2 - principal2 < 0) {
+            principal2 = balance2;
+            balance2 = 0;
+          } else {
+            balance2 -= principal2;
+          }
+        }
+
+        const combinedBorrowerPmt = borrowerPmt1 + pmt2;
+        const combinedEndingDebt = Math.max(0, balance1) + Math.max(0, balance2);
 
         schedule.push({
           month: m,
           year: year,
-          begBalance: begBalance,
-          totalPmt: totalMonthlyPayment,
-          borrowerPmt: borrowerPmt,
-          govSubsidyPmt: govSubsidyPmt,
-          interest: interest,
-          principal: principal,
-          endBalance: Math.max(0, balance)
+          begBalance1: begBalance1,
+          totalPmt1: totalMonthlyPayment,
+          borrowerPmt1: borrowerPmt1,
+          govSubsidyPmt1: govSubsidyPmt1,
+          interest1: interest1,
+          principal1: principal1,
+          endBalance1: Math.max(0, balance1),
+
+          // Second loan metrics
+          begBalance2: begBalance2,
+          pmt2: pmt2,
+          interest2: interest2,
+          principal2: principal2,
+          endBalance2: Math.max(0, balance2),
+
+          // Combined totals
+          combinedBorrowerPmt: combinedBorrowerPmt,
+          combinedEndingDebt: combinedEndingDebt
         });
 
-        if (balance <= 0) break;
+        if (balance1 <= 0 && balance2 <= 0 && m >= months2) break;
       }
 
       return {
         totalMonthlyPayment,
         netFinancedAmount,
         upfrontGrant,
+        secondLoanPMT,
         schedule
       };
     }
 
     function updateUI() {
-      const { totalMonthlyPayment, netFinancedAmount, upfrontGrant, schedule } = calculateFinancing();
+      const { totalMonthlyPayment, netFinancedAmount, upfrontGrant, secondLoanPMT, schedule } = calculateFinancing();
+
+      // Update Second Loan badge & container visibility
+      document.getElementById('secondLoanContainer').className = state.includeSecondLoan ? 'space-y-4 mt-4 p-4 bg-slate-900/90 rounded-2xl border border-slate-700/80 shadow-inner' : 'hidden';
+      document.getElementById('secondLoanPmtBadge').textContent = `BD ${secondLoanPMT.toFixed(2)} /mo`;
+      document.getElementById('secondLoanTermBadge').textContent = `for ${state.loan2TenureYears} Years (${state.loan2TenureYears * 12} Months)`;
+      document.getElementById('secondLoanComparisonBanner').className = state.includeSecondLoan ? 'bg-gradient-to-r from-amber-900/60 via-slate-800 to-slate-900 rounded-3xl p-6 border border-amber-500/30 shadow-xl space-y-4' : 'hidden';
+
+      if (state.includeSecondLoan) {
+        document.getElementById('bannerSecondLoanPmt').textContent = `BD ${secondLoanPMT.toFixed(2)} /mo`;
+        document.getElementById('bannerSecondLoanTerm').textContent = `Years 1 – ${state.loan2TenureYears} (${state.loan2TenureYears * 12} Months)`;
+        document.getElementById('bannerCombinedPrincipal').textContent = `BD ${(netFinancedAmount + state.loan2Amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        
+        const totalInterest1 = schedule.reduce((sum, r) => sum + r.interest1, 0);
+        const totalInterest2 = schedule.reduce((sum, r) => sum + r.interest2, 0);
+        document.getElementById('bannerCombinedInterest').textContent = `BD ${(totalInterest1 + totalInterest2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
 
       // Badges & Tier labels
       const optRates = state.option === 1 ? ['20%', '25%', '30%'] : ['25%', '30%', '35%'];
@@ -535,15 +720,40 @@
 
       document.getElementById('cardPhase1Pay').textContent = `BD ${p1Borrower.toFixed(2)}`;
       document.getElementById('cardPhase1Gov').textContent = `BD ${p1Gov.toFixed(2)} /mo`;
-      document.getElementById('cardPhase1TotalPmt').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
 
       document.getElementById('cardPhase2Pay').textContent = `BD ${p2Borrower.toFixed(2)}`;
       document.getElementById('cardPhase2Gov').textContent = `BD ${p2Gov.toFixed(2)} /mo`;
-      document.getElementById('cardPhase2TotalPmt').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
 
       document.getElementById('cardPhase3Pay').textContent = `BD ${p3Borrower.toFixed(2)}`;
       document.getElementById('cardPhase3Gov').textContent = `BD ${p3Gov.toFixed(2)} /mo`;
-      document.getElementById('cardPhase3TotalPmt').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
+
+      if (state.includeSecondLoan) {
+        document.getElementById('repaymentCardsHeading').textContent = 'Combined Monthly Outflow';
+        document.getElementById('repaymentCardsSubheading').textContent = 'Primary housing repayment + Second loan monthly obligation';
+
+        document.getElementById('cardPhase1CombinedLabel').textContent = 'Total Outflow (Y1-5):';
+        document.getElementById('cardPhase1CombinedVal').textContent = `BD ${(p1Borrower + secondLoanPMT).toFixed(2)} /mo`;
+
+        document.getElementById('cardPhase2CombinedLabel').textContent = state.loan2TenureYears >= 10 ? 'Total Outflow (Y6-10):' : `Total (Y6-${state.loan2TenureYears}):`;
+        const y6Outflow = state.loan2TenureYears >= 6 ? p2Borrower + secondLoanPMT : p2Borrower;
+        document.getElementById('cardPhase2CombinedVal').textContent = `BD ${y6Outflow.toFixed(2)} /mo`;
+
+        document.getElementById('cardPhase3CombinedLabel').textContent = state.loan2TenureYears >= 11 ? `Total (Y11-${state.loan2TenureYears}):` : 'Total Outflow (Y11+):';
+        const y11Outflow = state.loan2TenureYears >= 11 ? p3Borrower + secondLoanPMT : p3Borrower;
+        document.getElementById('cardPhase3CombinedVal').textContent = `BD ${y11Outflow.toFixed(2)} /mo`;
+      } else {
+        document.getElementById('repaymentCardsHeading').textContent = 'Tiered Monthly Repayments';
+        document.getElementById('repaymentCardsSubheading').textContent = 'Monthly installment paid by applicant vs. Ministry monthly subsidy';
+
+        document.getElementById('cardPhase1CombinedLabel').textContent = 'Total to Bank:';
+        document.getElementById('cardPhase1CombinedVal').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
+
+        document.getElementById('cardPhase2CombinedLabel').textContent = 'Total to Bank:';
+        document.getElementById('cardPhase2CombinedVal').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
+
+        document.getElementById('cardPhase3CombinedLabel').textContent = 'Total to Bank:';
+        document.getElementById('cardPhase3CombinedVal').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
+      }
 
       document.getElementById('totalMonthlyInstallmentBadge').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
 
@@ -558,11 +768,19 @@
       document.getElementById('metricTotalFinance').textContent = `BD ${state.totalFinance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       document.getElementById('metricSlrbFee').textContent = `BD ${state.slrbFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-      const totalInterest = schedule.reduce((sum, r) => sum + r.interest, 0);
-      const totalGovMonthly = schedule.reduce((sum, r) => sum + r.govSubsidyPmt, 0);
+      const totalInterest1 = schedule.reduce((sum, r) => sum + r.interest1, 0);
+      const totalInterest2 = schedule.reduce((sum, r) => sum + r.interest2, 0);
+      const totalGovMonthly = schedule.reduce((sum, r) => sum + r.govSubsidyPmt1, 0);
       const totalGovSupport = upfrontGrant + totalGovMonthly;
 
-      document.getElementById('metricInterestPaid').textContent = `BD ${totalInterest.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (state.includeSecondLoan) {
+        document.getElementById('labelMetricInterest').textContent = 'Combined Interest Paid';
+        document.getElementById('metricInterestPaid').textContent = `BD ${(totalInterest1 + totalInterest2).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      } else {
+        document.getElementById('labelMetricInterest').textContent = 'Total Interest Paid';
+        document.getElementById('metricInterestPaid').textContent = `BD ${totalInterest1.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+
       document.getElementById('metricTotalGovSupport').textContent = `BD ${totalGovSupport.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
       renderTable(schedule);
@@ -571,22 +789,67 @@
 
     function renderTable(schedule) {
       const tbody = document.getElementById('scheduleTableBody');
+      const thead = document.getElementById('scheduleTableHeader');
       tbody.innerHTML = '';
+
+      if (state.includeSecondLoan) {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-4 px-5">Period</th>
+            <th class="py-4 px-5">Primary Pmt</th>
+            <th class="py-4 px-5 text-amber-400">2nd Loan Pmt</th>
+            <th class="py-4 px-5 text-amber-300">Total Outflow</th>
+            <th class="py-4 px-5">Gov Subsidy</th>
+            <th class="py-4 px-5">Primary Interest</th>
+            <th class="py-4 px-5 text-rose-300">2nd Interest</th>
+            <th class="py-4 px-5">Primary Balance</th>
+            <th class="py-4 px-5 text-amber-300">2nd Balance</th>
+          </tr>
+        `;
+      } else {
+        thead.innerHTML = `
+          <tr>
+            <th class="py-4 px-5">Period</th>
+            <th class="py-4 px-5">Beginning Balance</th>
+            <th class="py-4 px-5">Total Payment</th>
+            <th class="py-4 px-5">Your Share</th>
+            <th class="py-4 px-5">Gov Subsidy</th>
+            <th class="py-4 px-5">Interest Paid</th>
+            <th class="py-4 px-5">Principal Repaid</th>
+            <th class="py-4 px-5">Ending Balance</th>
+          </tr>
+        `;
+      }
 
       if (state.viewMode === 'monthly') {
         schedule.forEach(r => {
           const tr = document.createElement('tr');
-          tr.className = 'hover:bg-slate-700/30 transition';
-          tr.innerHTML = `
-            <td class="py-3 px-4 font-semibold text-white">Month ${r.month}</td>
-            <td class="py-3 px-4 text-slate-300">BD ${r.begBalance.toFixed(2)}</td>
-            <td class="py-3 px-4 font-bold text-blue-400">BD ${r.totalPmt.toFixed(2)}</td>
-            <td class="py-3 px-4 text-slate-200">BD ${r.borrowerPmt.toFixed(2)}</td>
-            <td class="py-3 px-4 text-emerald-400">BD ${r.govSubsidyPmt.toFixed(2)}</td>
-            <td class="py-3 px-4 text-rose-400">BD ${r.interest.toFixed(2)}</td>
-            <td class="py-3 px-4 text-slate-300">BD ${r.principal.toFixed(2)}</td>
-            <td class="py-3 px-4 font-medium text-white">BD ${r.endBalance.toFixed(2)}</td>
-          `;
+          tr.className = 'hover:bg-slate-700/40 transition border-b border-slate-800/60';
+
+          if (state.includeSecondLoan) {
+            tr.innerHTML = `
+              <td class="py-3.5 px-5 font-semibold text-white">Month ${r.month}</td>
+              <td class="py-3.5 px-5 text-slate-200">BD ${r.borrowerPmt1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-amber-400 font-bold">BD ${r.pmt2.toFixed(2)}</td>
+              <td class="py-3.5 px-5 font-extrabold text-amber-300 bg-amber-500/10 rounded-lg">BD ${r.combinedBorrowerPmt.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-emerald-400">BD ${r.govSubsidyPmt1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-rose-400">BD ${r.interest1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-rose-300">BD ${r.interest2.toFixed(2)}</td>
+              <td class="py-3.5 px-5 font-medium text-white">BD ${r.endBalance1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 font-medium text-amber-200">BD ${r.endBalance2.toFixed(2)}</td>
+            `;
+          } else {
+            tr.innerHTML = `
+              <td class="py-3.5 px-5 font-semibold text-white">Month ${r.month}</td>
+              <td class="py-3.5 px-5 text-slate-300">BD ${r.begBalance1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 font-bold text-blue-400">BD ${r.totalPmt1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-slate-200">BD ${r.borrowerPmt1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-emerald-400">BD ${r.govSubsidyPmt1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-rose-400">BD ${r.interest1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 text-slate-300">BD ${r.principal1.toFixed(2)}</td>
+              <td class="py-3.5 px-5 font-medium text-white">BD ${r.endBalance1.toFixed(2)}</td>
+            `;
+          }
           tbody.appendChild(tr);
         });
       } else {
@@ -595,26 +858,46 @@
           const yearRows = schedule.filter(r => r.year === y);
           if (yearRows.length === 0) continue;
 
-          const begBalance = yearRows[0].begBalance;
-          const endBalance = yearRows[yearRows.length - 1].endBalance;
-          const totalPmtSum = yearRows.reduce((sum, r) => sum + r.totalPmt, 0);
-          const borrowerPmtSum = yearRows.reduce((sum, r) => sum + r.borrowerPmt, 0);
-          const govSubsidySum = yearRows.reduce((sum, r) => sum + r.govSubsidyPmt, 0);
-          const interestSum = yearRows.reduce((sum, r) => sum + r.interest, 0);
-          const principalSum = yearRows.reduce((sum, r) => sum + r.principal, 0);
+          const begBalance1 = yearRows[0].begBalance1;
+          const endBalance1 = yearRows[yearRows.length - 1].endBalance1;
+          const endBalance2 = yearRows[yearRows.length - 1].endBalance2;
+
+          const borrowerPmt1Sum = yearRows.reduce((sum, r) => sum + r.borrowerPmt1, 0);
+          const pmt2Sum = yearRows.reduce((sum, r) => sum + r.pmt2, 0);
+          const combinedBorrowerSum = yearRows.reduce((sum, r) => sum + r.combinedBorrowerPmt, 0);
+          const govSubsidy1Sum = yearRows.reduce((sum, r) => sum + r.govSubsidyPmt1, 0);
+          const interest1Sum = yearRows.reduce((sum, r) => sum + r.interest1, 0);
+          const interest2Sum = yearRows.reduce((sum, r) => sum + r.interest2, 0);
+          const totalPmt1Sum = yearRows.reduce((sum, r) => sum + r.totalPmt1, 0);
+          const principal1Sum = yearRows.reduce((sum, r) => sum + r.principal1, 0);
 
           const tr = document.createElement('tr');
-          tr.className = 'hover:bg-slate-700/30 transition';
-          tr.innerHTML = `
-            <td class="py-3 px-4 font-semibold text-white">Year ${y}</td>
-            <td class="py-3 px-4 text-slate-300">BD ${begBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-3 px-4 font-bold text-blue-400">BD ${totalPmtSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-3 px-4 text-slate-200">BD ${borrowerPmtSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-3 px-4 text-emerald-400">BD ${govSubsidySum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-3 px-4 text-rose-400">BD ${interestSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-3 px-4 text-slate-300">BD ${principalSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-3 px-4 font-medium text-white">BD ${endBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-          `;
+          tr.className = 'hover:bg-slate-700/40 transition border-b border-slate-800/60';
+
+          if (state.includeSecondLoan) {
+            tr.innerHTML = `
+              <td class="py-3.5 px-5 font-semibold text-white">Year ${y}</td>
+              <td class="py-3.5 px-5 text-slate-200">BD ${borrowerPmt1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-amber-400 font-bold">BD ${pmt2Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 font-extrabold text-amber-300 bg-amber-500/10 rounded-lg">BD ${combinedBorrowerSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-emerald-400">BD ${govSubsidy1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-rose-400">BD ${interest1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-rose-300">BD ${interest2Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 font-medium text-white">BD ${endBalance1.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 font-medium text-amber-200">BD ${endBalance2.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            `;
+          } else {
+            tr.innerHTML = `
+              <td class="py-3.5 px-5 font-semibold text-white">Year ${y}</td>
+              <td class="py-3.5 px-5 text-slate-300">BD ${begBalance1.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 font-bold text-blue-400">BD ${totalPmt1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-slate-200">BD ${borrowerPmt1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-emerald-400">BD ${govSubsidy1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-rose-400">BD ${interest1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 text-slate-300">BD ${principal1Sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <td class="py-3.5 px-5 font-medium text-white">BD ${endBalance1.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            `;
+          }
           tbody.appendChild(tr);
         }
       }
@@ -623,35 +906,60 @@
     function renderChart(schedule, startingNetDebt) {
       const ctx = document.getElementById('amortizationChart').getContext('2d');
       const yearlyLabels = [];
-      const balanceData = [];
+      const balanceData1 = [];
+      const combinedDebtData = [];
 
       for (let y = 1; y <= state.tenureYears; y++) {
         const yearRows = schedule.filter(r => r.year === y);
         if (yearRows.length > 0) {
+          const lastRow = yearRows[yearRows.length - 1];
           yearlyLabels.push(`Yr ${y}`);
-          balanceData.push(yearRows[yearRows.length - 1].endBalance);
+          balanceData1.push(lastRow.endBalance1);
+          combinedDebtData.push(lastRow.combinedEndingDebt);
         }
       }
 
       if (chartInstance) chartInstance.destroy();
 
+      const datasets = [
+        {
+          label: 'Primary Housing Loan Balance (BD)',
+          data: [startingNetDebt, ...balanceData1],
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.10)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#60a5fa'
+        }
+      ];
+
+      if (state.includeSecondLoan) {
+        const startingCombined = startingNetDebt + state.loan2Amount;
+        datasets.unshift({
+          label: 'Combined Total Debt Balance (Primary + 2nd Loan)',
+          data: [startingCombined, ...combinedDebtData],
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245, 158, 11, 0.08)',
+          fill: false,
+          borderDash: [5, 5],
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#fbbf24'
+        });
+      }
+
+      document.getElementById('chartSubheading').textContent = state.includeSecondLoan 
+        ? 'Compare primary housing debt vs combined debt reduction over time' 
+        : 'Remaining bank loan balance reduction over time';
+
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
           labels: ['Start (M1)', ...yearlyLabels],
-          datasets: [
-            {
-              label: 'Remaining Bank Loan Balance (BD)',
-              data: [startingNetDebt, ...balanceData],
-              borderColor: '#3b82f6',
-              backgroundColor: 'rgba(59, 130, 246, 0.12)',
-              fill: true,
-              tension: 0.3,
-              pointRadius: 3,
-              pointHoverRadius: 6,
-              pointBackgroundColor: '#60a5fa'
-            }
-          ]
+          datasets: datasets
         },
         options: {
           responsive: true,
@@ -677,7 +985,7 @@
               borderColor: '#334155',
               borderWidth: 1,
               callbacks: {
-                label: ctx => ` Loan Balance: BD ${ctx.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+                label: ctx => ` ${ctx.dataset.label}: BD ${ctx.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
               }
             },
             legend: { 
@@ -689,26 +997,125 @@
       });
     }
 
-    function exportToCSV() {
+    function exportToExcel() {
       const { schedule, upfrontGrant, netFinancedAmount } = calculateFinancing();
-      let csv = `Total Finance Amount: BD ${state.totalFinance.toFixed(2)}\n`;
-      csv += `Upfront Government Subsidy: BD ${upfrontGrant.toFixed(3)}\n`;
-      csv += `Bank Financed Principal: BD ${netFinancedAmount.toFixed(3)}\n`;
-      csv += `SLRB Registration Fee: BD ${state.slrbFee.toFixed(2)}\n\n`;
-      csv += 'Month,Year,Beginning Balance (BD),Total Payment (BD),Borrower Share (BD),Gov Subsidy Share (BD),Interest (BD),Principal Repaid (BD),Ending Balance (BD)\n';
+      
+      const isSecond = state.includeSecondLoan;
+      const headers = isSecond
+        ? ['Period', 'Primary Borrower Pmt (BD)', 'Second Loan Pmt (BD)', 'Total Monthly Outflow (BD)', 'Gov Subsidy (BD)', 'Primary Interest (BD)', 'Second Interest (BD)', 'Primary End Balance (BD)', 'Second End Balance (BD)']
+        : ['Period', 'Beginning Balance (BD)', 'Total Payment (BD)', 'Borrower Share (BD)', 'Gov Subsidy Share (BD)', 'Interest Paid (BD)', 'Principal Repaid (BD)', 'Ending Balance (BD)'];
 
-      schedule.forEach(r => {
-        csv += `${r.month},${r.year},${r.begBalance.toFixed(2)},${r.totalPmt.toFixed(2)},${r.borrowerPmt.toFixed(2)},${r.govSubsidyPmt.toFixed(2)},${r.interest.toFixed(2)},${r.principal.toFixed(2)},${r.endBalance.toFixed(2)}\n`;
-      });
+      const data = [
+        ['Tas\'heel Plus Housing & Dual Loan Schedule Report'],
+        ['Kingdom of Bahrain • Ministry of Housing & Urban Planning Housing Program'],
+        [],
+        ['Monthly Salary (BD)', state.salary],
+        ['Total Property Finance Amount (BD)', state.totalFinance],
+        ['Upfront Government Subsidy (Grant) (BD)', upfrontGrant],
+        ['Primary Financed Principal (Bank Loan) (BD)', netFinancedAmount],
+        ['SLRB Registration Fee (BD)', state.slrbFee]
+      ];
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `tasheel_plus_schedule_${state.totalFinance}BD.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (isSecond) {
+        data.push(['Second Loan Principal (BD)', state.loan2Amount]);
+        data.push(['Second Loan Interest Rate (APR)', state.loan2Rate + '%']);
+        data.push(['Second Loan Tenure', state.loan2TenureYears + ' Years (' + (state.loan2TenureYears * 12) + ' Months)']);
+      }
+
+      data.push([]);
+      data.push(headers);
+
+      if (state.viewMode === 'monthly') {
+        schedule.forEach(r => {
+          if (isSecond) {
+            data.push([
+              `Month ${r.month}`,
+              Number(r.borrowerPmt1.toFixed(2)),
+              Number(r.pmt2.toFixed(2)),
+              Number(r.combinedBorrowerPmt.toFixed(2)),
+              Number(r.govSubsidyPmt1.toFixed(2)),
+              Number(r.interest1.toFixed(2)),
+              Number(r.interest2.toFixed(2)),
+              Number(r.endBalance1.toFixed(2)),
+              Number(r.endBalance2.toFixed(2))
+            ]);
+          } else {
+            data.push([
+              `Month ${r.month}`,
+              Number(r.begBalance1.toFixed(2)),
+              Number(r.totalPmt1.toFixed(2)),
+              Number(r.borrowerPmt1.toFixed(2)),
+              Number(r.govSubsidyPmt1.toFixed(2)),
+              Number(r.interest1.toFixed(2)),
+              Number(r.principal1.toFixed(2)),
+              Number(r.endBalance1.toFixed(2))
+            ]);
+          }
+        });
+      } else {
+        for (let y = 1; y <= state.tenureYears; y++) {
+          const yearRows = schedule.filter(r => r.year === y);
+          if (yearRows.length === 0) continue;
+
+          const begBalance1 = yearRows[0].begBalance1;
+          const endBalance1 = yearRows[yearRows.length - 1].endBalance1;
+          const endBalance2 = yearRows[yearRows.length - 1].endBalance2;
+
+          const borrowerPmt1Sum = yearRows.reduce((sum, r) => sum + r.borrowerPmt1, 0);
+          const pmt2Sum = yearRows.reduce((sum, r) => sum + r.pmt2, 0);
+          const combinedBorrowerSum = yearRows.reduce((sum, r) => sum + r.combinedBorrowerPmt, 0);
+          const govSubsidy1Sum = yearRows.reduce((sum, r) => sum + r.govSubsidyPmt1, 0);
+          const interest1Sum = yearRows.reduce((sum, r) => sum + r.interest1, 0);
+          const interest2Sum = yearRows.reduce((sum, r) => sum + r.interest2, 0);
+          const totalPmt1Sum = yearRows.reduce((sum, r) => sum + r.totalPmt1, 0);
+          const principal1Sum = yearRows.reduce((sum, r) => sum + r.principal1, 0);
+
+          if (isSecond) {
+            data.push([
+              `Year ${y}`,
+              Number(borrowerPmt1Sum.toFixed(2)),
+              Number(pmt2Sum.toFixed(2)),
+              Number(combinedBorrowerSum.toFixed(2)),
+              Number(govSubsidy1Sum.toFixed(2)),
+              Number(interest1Sum.toFixed(2)),
+              Number(interest2Sum.toFixed(2)),
+              Number(endBalance1.toFixed(2)),
+              Number(endBalance2.toFixed(2))
+            ]);
+          } else {
+            data.push([
+              `Year ${y}`,
+              Number(begBalance1.toFixed(2)),
+              Number(totalPmt1Sum.toFixed(2)),
+              Number(borrowerPmt1Sum.toFixed(2)),
+              Number(govSubsidy1Sum.toFixed(2)),
+              Number(interest1Sum.toFixed(2)),
+              Number(principal1Sum.toFixed(2)),
+              Number(endBalance1.toFixed(2))
+            ]);
+          }
+        }
+      }
+
+      if (window.XLSX) {
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const colWidths = headers.map(h => ({ wch: Math.max(h.length + 3, 16) }));
+        ws['!cols'] = colWidths;
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Schedule');
+        XLSX.writeFile(wb, `tasheel_plus_schedule_${state.totalFinance}BD.xlsx`);
+      } else {
+        let csv = data.map(row => row.join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `tasheel_plus_schedule_${state.totalFinance}BD.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
 
     // Input Synchronization & Event Listeners
@@ -749,6 +1156,27 @@
       updateUI();
     });
 
+    // Second Loan Listeners
+    document.getElementById('chkIncludeSecondLoan').addEventListener('change', e => {
+      state.includeSecondLoan = e.target.checked;
+      updateUI();
+    });
+
+    document.getElementById('loan2Amount').addEventListener('input', e => {
+      state.loan2Amount = parseFloat(e.target.value) || 0;
+      updateUI();
+    });
+
+    document.getElementById('loan2Rate').addEventListener('input', e => {
+      state.loan2Rate = parseFloat(e.target.value) || 0;
+      updateUI();
+    });
+
+    document.getElementById('loan2TenureYears').addEventListener('change', e => {
+      state.loan2TenureYears = parseInt(e.target.value);
+      updateUI();
+    });
+
     document.querySelectorAll('input[name="programOption"]').forEach(elem => {
       elem.addEventListener('change', e => {
         state.option = parseInt(e.target.value);
@@ -773,21 +1201,21 @@
 
     document.getElementById('viewAnnualBtn').addEventListener('click', () => {
       state.viewMode = 'annual';
-      document.getElementById('viewAnnualBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition';
-      document.getElementById('viewMonthlyBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition';
+      document.getElementById('viewAnnualBtn').className = 'px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 text-white shadow-md transition';
+      document.getElementById('viewMonthlyBtn').className = 'px-4 py-2 text-xs font-bold rounded-xl text-slate-300 hover:bg-slate-700 transition';
       updateUI();
     });
 
     document.getElementById('viewMonthlyBtn').addEventListener('click', () => {
       state.viewMode = 'monthly';
-      document.getElementById('viewMonthlyBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition';
-      document.getElementById('viewAnnualBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition';
+      document.getElementById('viewMonthlyBtn').className = 'px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 text-white shadow-md transition';
+      document.getElementById('viewAnnualBtn').className = 'px-4 py-2 text-xs font-bold rounded-xl text-slate-300 hover:bg-slate-700 transition';
       updateUI();
     });
 
-    document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
+    document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
 
-    // Preset button to reset to BD 600 example
+    // Preset button to reset to BD 600 example + Second Loan 30k example
     document.getElementById('btnLoadExample').addEventListener('click', () => {
       state.salary = 600;
       state.option = 2;
@@ -795,6 +1223,11 @@
       state.tenureYears = 30;
       state.interestRate = 6.10;
       state.slrbFee = 1200;
+
+      state.includeSecondLoan = true;
+      state.loan2Amount = 30000;
+      state.loan2Rate = 4.0;
+      state.loan2TenureYears = 7;
 
       document.getElementById('salary').value = 600;
       document.querySelectorAll('input[name="programOption"]')[1].checked = true;
@@ -804,6 +1237,11 @@
       document.getElementById('tenureYears').value = 30;
       document.getElementById('interestRate').value = 6.10;
       document.getElementById('slrbFee').value = 1200;
+
+      document.getElementById('chkIncludeSecondLoan').checked = true;
+      document.getElementById('loan2Amount').value = 30000;
+      document.getElementById('loan2Rate').value = 4.0;
+      document.getElementById('loan2TenureYears').value = 7;
 
       updateUI();
     });
