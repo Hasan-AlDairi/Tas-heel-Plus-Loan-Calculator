@@ -3,270 +3,385 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tas'heel Plus - Upfront Lump-Sum Subsidy Calculator</title>
+  <title>Tas'heel Plus Loan Calculator - Ministry Housing Subsidy & Financing Model</title>
+  <meta name="description" content="Calculate your Tas'heel Plus upfront lump-sum government grant, bank financed principal balance, SLRB fees, and tiered monthly installment schedule." />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    input[type=range]::-webkit-slider-thumb {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #2563eb;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+    }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <!-- Header -->
-    <header class="mb-8">
-      <div class="flex items-center space-x-3 mb-2">
-        <div class="p-2.5 bg-blue-600 text-white rounded-xl shadow-md">
-          <i data-lucide="landmark" class="w-6 h-6"></i>
+<body class="bg-slate-900 text-slate-100 min-h-screen selection:bg-blue-500 selection:text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header Section -->
+    <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div>
+        <div class="flex items-center space-x-3 mb-2">
+          <div class="p-3 bg-gradient-to-tr from-blue-600 to-indigo-500 text-white rounded-2xl shadow-lg shadow-blue-500/20">
+            <i data-lucide="landmark" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                Tas'heel Plus Loan Calculator
+              </h1>
+            </div>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5">
+              Kingdom of Bahrain • Ministry of Housing & Urban Planning Housing Program
+            </p>
+          </div>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800">
-          Tas'heel Plus Loan Calculator
-        </h1>
       </div>
-      <p class="text-slate-600 text-sm sm:text-base">
-        Calculates the <strong>upfront lump-sum government grant</strong> injected at Month 1 alongside your tiered loan repayments (Years 1–5, 6–10, and 11–30).
-      </p>
+
+      <!-- Quick Preset & Actions -->
+      <div class="flex items-center space-x-3">
+        <button
+          id="btnLoadExample"
+          class="flex items-center space-x-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95"
+        >
+          <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+          <span>Load Example (BD 915 Salary)</span>
+        </button>
+      </div>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <!-- Input Controls (Sidebar) -->
-      <aside class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <h2 class="text-lg font-bold text-slate-800 mb-5 flex items-center space-x-2">
-          <i data-lucide="sliders" class="w-5 h-5 text-blue-600"></i>
-          <span>Financing Parameters</span>
-        </h2>
+      
+      <!-- Left Sidebar: Financial Inputs -->
+      <aside class="lg:col-span-4 bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-700/60 shadow-xl space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
+          <h2 class="text-base font-bold text-slate-100 flex items-center space-x-2">
+            <i data-lucide="sliders" class="w-5 h-5 text-blue-400"></i>
+            <span>Financing Parameters</span>
+          </h2>
+          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Inputs</span>
+        </div>
 
         <div class="space-y-5">
-          <!-- Monthly Salary -->
+          <!-- Salary Input -->
           <div>
-            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+            <label for="salary" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
               Monthly Salary / Combined Income
             </label>
             <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-medium text-sm">BD</span>
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold text-sm">BD</span>
               <input
                 id="salary"
                 type="number"
-                value="600"
-                step="50"
+                value="915"
+                step="5"
                 min="600"
-                max="1200"
-                class="w-full pl-12 pr-4 py-2.5 border border-slate-300 rounded-lg text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-medium"
+                max="2500"
+                class="w-full pl-12 pr-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
               />
             </div>
-            <p class="text-xs text-slate-400 mt-1">Eligible range: BD 600 – BD 1,200</p>
+            <p class="text-[11px] text-slate-400 mt-1">Eligible income range: BD 600 – BD 1,200+</p>
           </div>
 
-          <!-- Program Option -->
+          <!-- Program Option Selector -->
           <div>
-            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-              Program Tier
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              Program Tier Track
             </label>
             <div class="grid grid-cols-2 gap-3">
-              <label class="cursor-pointer border rounded-xl p-3 flex flex-col text-left transition relative border-slate-200 hover:border-slate-300" id="label-opt1">
+              <label id="label-opt1" class="cursor-pointer border rounded-2xl p-3 flex flex-col text-left transition-all border-slate-700 bg-slate-900/40 hover:border-slate-600">
                 <input type="radio" name="programOption" value="1" class="sr-only" />
-                <span class="font-bold text-slate-800 text-sm">Option 1</span>
-                <span class="text-xs text-slate-500 mt-0.5">Cap: BD 81,000</span>
-                <span class="text-[11px] text-blue-600 font-semibold mt-1">20% → 25% → 30%</span>
+                <span class="font-bold text-slate-200 text-xs">Option 1</span>
+                <span class="text-[11px] text-slate-400 mt-0.5">Cap: BD 81,000</span>
+                <span class="text-[11px] text-blue-400 font-medium mt-1">20% → 25% → 30%</span>
               </label>
 
-              <label class="cursor-pointer border rounded-xl p-3 flex flex-col text-left transition relative border-blue-600 bg-blue-50/50" id="label-opt2">
+              <label id="label-opt2" class="cursor-pointer border rounded-2xl p-3 flex flex-col text-left transition-all border-blue-500/80 bg-blue-500/10 shadow-lg shadow-blue-500/10">
                 <input type="radio" name="programOption" value="2" checked class="sr-only" />
-                <span class="font-bold text-slate-800 text-sm">Option 2</span>
-                <span class="text-xs text-slate-500 mt-0.5">Cap: BD 91,000</span>
-                <span class="text-[11px] text-blue-600 font-semibold mt-1">25% → 30% → 35%</span>
+                <span class="font-bold text-white text-xs">Option 2</span>
+                <span class="text-[11px] text-slate-400 mt-0.5">Cap: BD 91,000</span>
+                <span class="text-[11px] text-blue-400 font-medium mt-1">25% → 30% → 35%</span>
               </label>
             </div>
           </div>
 
-          <!-- Property Price / Total Loan -->
+          <!-- Total Finance Amount -->
           <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Total Property Financing
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="totalFinanceInput" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                Total Finance Amount
               </label>
-              <span id="loanValueBadge" class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">BD 57,000</span>
+              <span id="totalFinanceBadge" class="text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-lg border border-blue-500/20">
+                BD 69,356.21
+              </span>
+            </div>
+            <div class="relative mb-2">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold text-sm">BD</span>
+              <input
+                id="totalFinanceInput"
+                type="number"
+                step="0.010"
+                min="57000"
+                max="91000"
+                value="69356.210"
+                class="w-full pl-12 pr-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              />
             </div>
             <input
-              id="loanAmount"
+              id="totalFinanceSlider"
               type="range"
               min="57000"
               max="91000"
-              step="1000"
-              value="57000"
-              class="w-full accent-blue-600 cursor-pointer"
+              step="100"
+              value="69356.21"
+              class="w-full accent-blue-500 cursor-pointer"
             />
             <div class="flex justify-between text-[11px] text-slate-400 mt-1">
-              <span>BD 57k</span>
-              <span id="loanMaxIndicator">BD 91k Cap</span>
+              <span>BD 57,000</span>
+              <span id="maxCapIndicator">Cap: BD 91,000</span>
             </div>
           </div>
 
-          <!-- Term -->
+          <!-- Loan Tenure -->
           <div>
-            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+            <label for="tenureYears" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
               Loan Term
             </label>
-            <select id="tenureYears" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-              <option value="20">20 Years (240 Months)</option>
+            <select
+              id="tenureYears"
+              class="w-full px-3.5 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            >
               <option value="25">25 Years (300 Months)</option>
               <option value="30" selected>30 Years (360 Months)</option>
             </select>
           </div>
 
-          <!-- Bank Profit Rate -->
+          <!-- Interest Rate -->
           <div>
-            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+            <label for="interestRate" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
               Bank Profit Rate (APR)
             </label>
             <div class="relative">
               <input
                 id="interestRate"
                 type="number"
-                value="5.50"
+                value="6.1"
                 step="0.1"
-                min="1.0"
-                max="12.0"
-                class="w-full pr-10 pl-3.5 py-2.5 border border-slate-300 rounded-lg text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition font-medium"
+                min="0.0"
+                max="15.0"
+                class="w-full pr-10 pl-3.5 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               />
-              <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 font-medium text-sm">%</span>
+              <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 font-semibold text-sm">%</span>
+            </div>
+          </div>
+
+          <!-- SLRB Fee Input -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="slrbFee" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                SLRB Registration Fee
+              </label>
+              <span class="text-[11px] text-slate-400">WIP</span>
+            </div>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold text-sm">BD</span>
+              <input
+                id="slrbFee"
+                type="number"
+                value="1190"
+                step="10"
+                min="0"
+                class="w-full pl-12 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-slate-200 font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-sm"
+              />
             </div>
           </div>
         </div>
       </aside>
 
-      <!-- Main Results -->
+      <!-- Right Main Content Area -->
       <main class="lg:col-span-8 space-y-6">
-        <!-- Upfront Lump Sum Highlight Banner -->
-        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-6 text-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <div class="flex items-center space-x-2 text-emerald-100 text-xs font-bold uppercase tracking-wider">
-              <i data-lucide="gift" class="w-4 h-4"></i>
-              <span>Government Upfront Lump-Sum Grant (Month 1)</span>
-            </div>
-            <div class="text-3xl sm:text-4xl font-black mt-1" id="upfrontGrantAmount">
-              BD 0.00
-            </div>
-            <p class="text-xs text-emerald-100 mt-1 max-w-md">
-              Paid directly by the Ministry to your financing bank at disbursement to absorb part of the property cost upfront.
-            </p>
-          </div>
+        
+        <!-- Hero Banner: Upfront Government Subsidy vs Financed Loan -->
+        <div class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-700 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-2xl border border-emerald-500/30">
+          <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 text-right w-full md:w-auto">
-            <span class="text-xs text-emerald-100 block">Your Net Financed Balance:</span>
-            <span class="text-2xl font-bold block mt-0.5" id="netFinancedBalance">BD 0.00</span>
-            <span class="text-[11px] text-emerald-200 block mt-0.5" id="subsidyPercentShare">0% covered by Gov</span>
+          <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <div class="inline-flex items-center space-x-2 bg-emerald-400/20 backdrop-blur-md px-3 py-1 rounded-full text-emerald-200 text-xs font-bold tracking-wide border border-emerald-300/20 mb-3">
+                <i data-lucide="gift" class="w-4 h-4 text-emerald-300"></i>
+                <span>Government Upfront Lump-Sum Subsidy</span>
+              </div>
+              <div class="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono" id="upfrontGrantAmount">
+                BD 16,509.221
+              </div>
+              <p class="text-xs sm:text-sm text-emerald-100/90 mt-2 max-w-lg leading-relaxed">
+                Direct lump-sum grant paid upfront by the Ministry to your financing bank at disbursement to reduce your property purchase price.
+              </p>
+            </div>
+
+            <div class="w-full md:w-auto bg-slate-900/80 backdrop-blur-md rounded-2xl p-5 border border-white/10 text-left md:text-right flex-shrink-0 shadow-inner">
+              <span class="text-xs font-medium text-slate-400 block uppercase tracking-wider">Bank Financed Principal</span>
+              <span class="text-2xl sm:text-3xl font-extrabold text-white font-mono block mt-1" id="netFinancedBalance">
+                BD 52,846.989
+              </span>
+              <span class="inline-block mt-2 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300 bg-emerald-500/20 rounded-full border border-emerald-400/20" id="subsidyPercentShare">
+                23.8% Covered by Gov Grant
+              </span>
+            </div>
           </div>
         </div>
 
         <!-- Tiered Repayment Cards -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-700/60 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-700/60 gap-2">
             <div>
-              <h2 class="text-lg font-bold text-slate-800">Your Tiered Monthly Installments</h2>
-              <p class="text-xs text-slate-500">Fixed percentage of allocation salary</p>
+              <h2 class="text-base font-bold text-white">Tiered Repayment Schedule & Monthly Subsidy</h2>
+              <p class="text-xs text-slate-400">Monthly installment paid by applicant vs. Ministry monthly subsidy</p>
             </div>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-              Personal Repayment
+            <span class="self-start sm:self-auto text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              Total Installment to Bank: <strong id="totalMonthlyInstallmentBadge" class="text-white font-mono">BD 320.25</strong>/mo
             </span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
             <!-- Phase 1 -->
-            <div class="p-4 rounded-xl border border-blue-100 bg-blue-50/40">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-blue-700 uppercase tracking-wider">Years 1 – 5</span>
-                <span id="rateLabel1" class="text-xs bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded">25%</span>
+            <div class="p-4 rounded-2xl border border-blue-500/30 bg-blue-500/5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-blue-400 uppercase tracking-wider">Years 1 – 5</span>
+                  <span id="rateLabel1" class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-2 py-0.5 rounded-md border border-blue-400/20">25% Salary</span>
+                </div>
+                <div class="mt-3">
+                  <div class="text-2xl font-black text-white font-mono" id="cardPhase1Pay">BD 228.75</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
+                </div>
               </div>
-              <div class="mt-3">
-                <div class="text-2xl font-black text-slate-900" id="cardPhase1Pay">BD 150.00</div>
-                <div class="text-xs text-slate-500 mt-1">per month (60 months)</div>
-              </div>
-              <div class="mt-3 pt-3 border-t border-blue-100/80 text-[11px] text-slate-600 flex justify-between">
-                <span>Phase Total:</span>
-                <span id="cardPhase1Total" class="font-semibold text-slate-900">BD 9,000</span>
+              <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
+                <div class="flex justify-between text-emerald-400">
+                  <span>Gov Subsidy:</span>
+                  <span id="cardPhase1Gov" class="font-bold">BD 91.50 /mo</span>
+                </div>
+                <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
+                  <span>Total to Bank:</span>
+                  <span id="cardPhase1TotalPmt" class="font-mono">BD 320.25</span>
+                </div>
               </div>
             </div>
 
             <!-- Phase 2 -->
-            <div class="p-4 rounded-xl border border-indigo-100 bg-indigo-50/40">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Years 6 – 10</span>
-                <span id="rateLabel2" class="text-xs bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded">30%</span>
+            <div class="p-4 rounded-2xl border border-indigo-500/30 bg-indigo-500/5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-indigo-400 uppercase tracking-wider">Years 6 – 10</span>
+                  <span id="rateLabel2" class="text-[11px] bg-indigo-500/20 text-indigo-300 font-bold px-2 py-0.5 rounded-md border border-indigo-400/20">30% Salary</span>
+                </div>
+                <div class="mt-3">
+                  <div class="text-2xl font-black text-white font-mono" id="cardPhase2Pay">BD 274.50</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
+                </div>
               </div>
-              <div class="mt-3">
-                <div class="text-2xl font-black text-slate-900" id="cardPhase2Pay">BD 180.00</div>
-                <div class="text-xs text-slate-500 mt-1">per month (60 months)</div>
-              </div>
-              <div class="mt-3 pt-3 border-t border-indigo-100/80 text-[11px] text-slate-600 flex justify-between">
-                <span>Phase Total:</span>
-                <span id="cardPhase2Total" class="font-semibold text-slate-900">BD 10,800</span>
+              <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
+                <div class="flex justify-between text-emerald-400">
+                  <span>Gov Subsidy:</span>
+                  <span id="cardPhase2Gov" class="font-bold">BD 45.75 /mo</span>
+                </div>
+                <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
+                  <span>Total to Bank:</span>
+                  <span id="cardPhase2TotalPmt" class="font-mono">BD 320.25</span>
+                </div>
               </div>
             </div>
 
             <!-- Phase 3 -->
-            <div class="p-4 rounded-xl border border-purple-100 bg-purple-50/40">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-purple-700 uppercase tracking-wider" id="phase3Title">Years 11 – 30</span>
-                <span id="rateLabel3" class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">35%</span>
+            <div class="p-4 rounded-2xl border border-purple-500/30 bg-purple-500/5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-purple-400 uppercase tracking-wider" id="phase3Title">Years 11 – 30</span>
+                  <span id="rateLabel3" class="text-[11px] bg-purple-500/20 text-purple-300 font-bold px-2 py-0.5 rounded-md border border-purple-400/20">35% Salary</span>
+                </div>
+                <div class="mt-3">
+                  <div class="text-2xl font-black text-white font-mono" id="cardPhase3Pay">BD 320.25</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
+                </div>
               </div>
-              <div class="mt-3">
-                <div class="text-2xl font-black text-slate-900" id="cardPhase3Pay">BD 210.00</div>
-                <div class="text-xs text-slate-500 mt-1" id="phase3Months">per month (240 months)</div>
-              </div>
-              <div class="mt-3 pt-3 border-t border-purple-100/80 text-[11px] text-slate-600 flex justify-between">
-                <span>Phase Total:</span>
-                <span id="cardPhase3Total" class="font-semibold text-slate-900">BD 50,400</span>
+              <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
+                <div class="flex justify-between text-slate-400">
+                  <span>Gov Subsidy:</span>
+                  <span id="cardPhase3Gov" class="font-bold">BD 0.00 /mo</span>
+                </div>
+                <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
+                  <span>Total to Bank:</span>
+                  <span id="cardPhase3TotalPmt" class="font-mono">BD 320.25</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Total Lifetime Outflow Metrics -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-5 border-t border-slate-100 text-center sm:text-left">
-            <div class="p-3 bg-slate-50 rounded-xl">
-              <span class="text-xs text-slate-500 font-medium">Total Principal Repaid</span>
-              <div class="text-base font-bold text-slate-800 mt-0.5" id="metricPrincipalPaid">BD 0.00</div>
+          <!-- Lifetime Financing Metrics Summary -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-700/60">
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
+              <span class="text-[11px] text-slate-400 font-semibold block">Total Property Finance</span>
+              <span class="text-sm font-bold text-white font-mono mt-0.5 block" id="metricTotalFinance">BD 69,356.21</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-              <span class="text-xs text-slate-500 font-medium">Total Bank Interest Paid</span>
-              <div class="text-base font-bold text-rose-600 mt-0.5" id="metricInterestPaid">BD 0.00</div>
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
+              <span class="text-[11px] text-slate-400 font-semibold block">SLRB Registration Fee</span>
+              <span class="text-sm font-bold text-amber-400 font-mono mt-0.5 block" id="metricSlrbFee">BD 1,190.00</span>
             </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-              <span class="text-xs text-slate-500 font-medium">Your Total Cash Outflow</span>
-              <div class="text-base font-bold text-slate-900 mt-0.5" id="metricTotalOutflow">BD 0.00</div>
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
+              <span class="text-[11px] text-slate-400 font-semibold block">Total Bank Interest Paid</span>
+              <span class="text-sm font-bold text-rose-400 font-mono mt-0.5 block" id="metricInterestPaid">BD 62,443.01</span>
+            </div>
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
+              <span class="text-[11px] text-slate-400 font-semibold block">Total Gov Support</span>
+              <span class="text-sm font-bold text-emerald-400 font-mono mt-0.5 block" id="metricTotalGovSupport">BD 24,744.22</span>
             </div>
           </div>
         </div>
 
-        <!-- Breakdown Chart -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-          <h2 class="text-base font-bold text-slate-800 mb-1">Financing Composition & Amortization</h2>
-          <p class="text-xs text-slate-500 mb-4">Initial property cost split and balance trajectory over time</p>
-          <div class="h-64">
+        <!-- Amortization Chart -->
+        <div class="bg-slate-800/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-700/60 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-white">Loan Amortization & Balance Trajectory</h2>
+              <p class="text-xs text-slate-400">Remaining bank loan balance reduction over time</p>
+            </div>
+          </div>
+          <div class="h-64 sm:h-72">
             <canvas id="amortizationChart"></canvas>
           </div>
         </div>
 
-        <!-- Amortization Schedule Table -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <!-- Detailed Amortization Table -->
+        <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-700/60 shadow-xl overflow-hidden">
+          <div class="p-5 border-b border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 class="font-bold text-slate-800">Amortization Schedule</h3>
-              <p class="text-xs text-slate-500">Track loan balance reduction starting from net debt</p>
+              <h3 class="text-base font-bold text-white">Amortization Schedule</h3>
+              <p class="text-xs text-slate-400">Detailed repayment breakdown per period</p>
             </div>
             <div class="flex items-center space-x-2">
               <button
                 id="viewAnnualBtn"
-                class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-700 transition"
+                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition"
               >
                 Annual Summary
               </button>
               <button
                 id="viewMonthlyBtn"
-                class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-100 transition"
+                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition"
               >
                 Monthly Schedule
               </button>
               <button
                 id="exportCsvBtn"
-                class="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold border border-slate-300 rounded-lg hover:bg-slate-50 transition text-slate-700"
+                class="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-semibold border border-slate-600 rounded-lg hover:bg-slate-700 text-slate-200 transition"
               >
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Export CSV</span>
@@ -275,123 +390,114 @@
           </div>
 
           <div class="overflow-x-auto max-h-96">
-            <table class="w-full text-left text-xs text-slate-600 border-collapse">
-              <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b border-slate-200 sticky top-0">
+            <table class="w-full text-left text-xs text-slate-300 border-collapse">
+              <thead class="bg-slate-900/90 text-slate-400 uppercase font-semibold border-b border-slate-700/80 sticky top-0 backdrop-blur-md">
                 <tr>
-                  <th class="py-3 px-4">Period</th>
-                  <th class="py-3 px-4">Beginning Balance</th>
-                  <th class="py-3 px-4">Monthly Payment</th>
-                  <th class="py-3 px-4">Interest</th>
-                  <th class="py-3 px-4">Principal Repaid</th>
-                  <th class="py-3 px-4">Ending Balance</th>
+                  <th class="py-3.5 px-4">Period</th>
+                  <th class="py-3.5 px-4">Beginning Balance</th>
+                  <th class="py-3.5 px-4">Total Payment</th>
+                  <th class="py-3.5 px-4">Your Share</th>
+                  <th class="py-3.5 px-4">Gov Subsidy</th>
+                  <th class="py-3.5 px-4">Interest Paid</th>
+                  <th class="py-3.5 px-4">Principal Repaid</th>
+                  <th class="py-3.5 px-4">Ending Balance</th>
                 </tr>
               </thead>
-              <tbody id="scheduleTableBody" class="divide-y divide-slate-100 font-mono">
-                <!-- Dynamically generated rows -->
+              <tbody id="scheduleTableBody" class="divide-y divide-slate-700/40 font-mono">
+                <!-- Dynamically populated rows -->
               </tbody>
             </table>
           </div>
         </div>
+
       </main>
     </div>
   </div>
 
   <script>
+    // App State initialized with verified standard example values
     let state = {
-      salary: 600,
+      salary: 915,
       option: 2,
-      loanAmount: 70000,
+      totalFinance: 69356.21,
       tenureYears: 30,
-      interestRate: 5.5,
+      interestRate: 6.10,
+      slrbFee: 1190,
       viewMode: 'annual'
     };
 
     let chartInstance = null;
 
-    // Helper: Present Value of an ordinary annuity
+    // Helper: Present Value of ordinary annuity
     function calculatePV(ratePerPeriod, periods, payment) {
       if (ratePerPeriod === 0) return payment * periods;
       return payment * ((1 - Math.pow(1 + ratePerPeriod, -periods)) / ratePerPeriod);
     }
 
-    // Helper: Tier payment per month
-    function getPhasePayment(salary, option, phase) {
+    // Return the max repayment percentage based on Option tier
+    function getMaxTierPercentage(option) {
+      return option === 1 ? 0.30 : 0.35;
+    }
+
+    // Return borrower's payment rate for a given year (Phase 1, 2, or 3)
+    function getBorrowerTierPercentage(option, year) {
       if (option === 1) {
-        return salary * (phase === 1 ? 0.20 : phase === 2 ? 0.25 : 0.30);
+        if (year <= 5) return 0.20;
+        if (year <= 10) return 0.25;
+        return 0.30;
       } else {
-        return salary * (phase === 1 ? 0.25 : phase === 2 ? 0.30 : 0.35);
+        if (year <= 5) return 0.25;
+        if (year <= 10) return 0.30;
+        return 0.35;
       }
     }
 
-    // Calculate maximum debt that the tiered installments can support (Net Supported Principal)
-    function calculateNetSupportedPrincipal(salary, option, tenureYears, annualRate) {
-      const r = annualRate / 100 / 12;
-      const m1 = getPhasePayment(salary, option, 1);
-      const m2 = getPhasePayment(salary, option, 2);
-      const m3 = getPhasePayment(salary, option, 3);
-
-      const n1 = 60;
-      const n2 = 60;
-      const n3 = Math.max(0, (tenureYears - 10) * 12);
-
-      // Present value of Phase 1 (Months 1-60)
-      const pv1 = calculatePV(r, n1, m1);
-
-      // Present value of Phase 2 (Months 61-120), discounted back 60 months
-      const pv2 = calculatePV(r, n2, m2) / Math.pow(1 + r, n1);
-
-      // Present value of Phase 3 (Months 121-end), discounted back 120 months
-      const pv3 = calculatePV(r, n3, m3) / Math.pow(1 + r, n1 + n2);
-
-      return pv1 + pv2 + pv3;
-    }
-
-    // Generate schedule
-    function buildSchedule() {
+    // Main calculation logic
+    function calculateFinancing() {
       const months = state.tenureYears * 12;
       const monthlyRate = state.interestRate / 100 / 12;
 
-      // Net principal supported by the applicant's tiered payments
-      const netSupportedPrincipal = calculateNetSupportedPrincipal(
-        state.salary,
-        state.option,
-        state.tenureYears,
-        state.interestRate
-      );
+      // Total monthly installment sent to the bank (based on max tier capability)
+      const maxTierPct = getMaxTierPercentage(state.option);
+      const totalMonthlyPayment = state.salary * maxTierPct;
 
-      // Lump sum grant = Property Price - Net Supported Principal
-      let upfrontGrant = state.loanAmount - netSupportedPrincipal;
-      if (upfrontGrant < 0) upfrontGrant = 0; // If salary alone covers the entire amount
+      // Net Bank Financed Principal = PV of total monthly payments over N months
+      const netFinancedAmount = calculatePV(monthlyRate, months, totalMonthlyPayment);
 
-      const startingNetDebt = state.loanAmount - upfrontGrant;
-      let balance = startingNetDebt;
+      // Government Upfront Lump-Sum Grant = Total Finance Amount - Net Financed Amount
+      let upfrontGrant = state.totalFinance - netFinancedAmount;
+      if (upfrontGrant < 0) upfrontGrant = 0;
+
+      // Build month-by-month schedule
+      let balance = netFinancedAmount;
       const schedule = [];
 
-      for (let m = 0; m < months; m++) {
-        const year = Math.floor(m / 12) + 1;
-        let payment = 0;
-        if (year <= 5) payment = getPhasePayment(state.salary, state.option, 1);
-        else if (year <= 10) payment = getPhasePayment(state.salary, state.option, 2);
-        else payment = getPhasePayment(state.salary, state.option, 3);
+      for (let m = 1; m <= months; m++) {
+        const year = Math.ceil(m / 12);
+        
+        const borrowerPct = getBorrowerTierPercentage(state.option, year);
+        const borrowerPmt = state.salary * borrowerPct;
+        const govSubsidyPmt = Math.max(0, totalMonthlyPayment - borrowerPmt);
 
         const begBalance = balance;
         const interest = balance * monthlyRate;
-        let principal = payment - interest;
+        let principal = totalMonthlyPayment - interest;
 
-        // Final month cleanup
-        if (m === months - 1 || balance - principal < 0) {
+        // Final period balance cleanup
+        if (m === months || balance - principal < 0) {
           principal = balance;
-          payment = principal + interest;
           balance = 0;
         } else {
           balance -= principal;
         }
 
         schedule.push({
-          month: m + 1,
+          month: m,
           year: year,
           begBalance: begBalance,
-          payment: payment,
+          totalPmt: totalMonthlyPayment,
+          borrowerPmt: borrowerPmt,
+          govSubsidyPmt: govSubsidyPmt,
           interest: interest,
           principal: principal,
           endBalance: Math.max(0, balance)
@@ -400,53 +506,67 @@
         if (balance <= 0) break;
       }
 
-      return { upfrontGrant, startingNetDebt, schedule };
+      return {
+        totalMonthlyPayment,
+        netFinancedAmount,
+        upfrontGrant,
+        schedule
+      };
     }
 
     function updateUI() {
-      const { upfrontGrant, startingNetDebt, schedule } = buildSchedule();
+      const { totalMonthlyPayment, netFinancedAmount, upfrontGrant, schedule } = calculateFinancing();
 
-      // Update Option Badges
+      // Badges & Tier labels
       const optRates = state.option === 1 ? ['20%', '25%', '30%'] : ['25%', '30%', '35%'];
-      document.getElementById('rateLabel1').textContent = optRates[0];
-      document.getElementById('rateLabel2').textContent = optRates[1];
-      document.getElementById('rateLabel3').textContent = optRates[2];
-
-      // Phase cards
-      const p1Pay = getPhasePayment(state.salary, state.option, 1);
-      const p2Pay = getPhasePayment(state.salary, state.option, 2);
-      const p3Pay = getPhasePayment(state.salary, state.option, 3);
-      const p3MonthsCount = Math.max(0, (state.tenureYears - 10) * 12);
-
+      document.getElementById('rateLabel1').textContent = `${optRates[0]} Salary`;
+      document.getElementById('rateLabel2').textContent = `${optRates[1]} Salary`;
+      document.getElementById('rateLabel3').textContent = `${optRates[2]} Salary`;
       document.getElementById('phase3Title').textContent = `Years 11 – ${state.tenureYears}`;
-      document.getElementById('phase3Months').textContent = `per month (${p3MonthsCount} months)`;
 
-      document.getElementById('cardPhase1Pay').textContent = `BD ${p1Pay.toFixed(2)}`;
-      document.getElementById('cardPhase1Total').textContent = `BD ${(p1Pay * 60).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+      // Card Payments
+      const p1Borrower = state.salary * (state.option === 1 ? 0.20 : 0.25);
+      const p2Borrower = state.salary * (state.option === 1 ? 0.25 : 0.30);
+      const p3Borrower = state.salary * (state.option === 1 ? 0.30 : 0.35);
 
-      document.getElementById('cardPhase2Pay').textContent = `BD ${p2Pay.toFixed(2)}`;
-      document.getElementById('cardPhase2Total').textContent = `BD ${(p2Pay * 60).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+      const p1Gov = totalMonthlyPayment - p1Borrower;
+      const p2Gov = totalMonthlyPayment - p2Borrower;
+      const p3Gov = Math.max(0, totalMonthlyPayment - p3Borrower);
 
-      document.getElementById('cardPhase3Pay').textContent = `BD ${p3Pay.toFixed(2)}`;
-      document.getElementById('cardPhase3Total').textContent = `BD ${(p3Pay * p3MonthsCount).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+      document.getElementById('cardPhase1Pay').textContent = `BD ${p1Borrower.toFixed(2)}`;
+      document.getElementById('cardPhase1Gov').textContent = `BD ${p1Gov.toFixed(2)} /mo`;
+      document.getElementById('cardPhase1TotalPmt').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
 
-      // Upfront Grant Banner
-      document.getElementById('upfrontGrantAmount').textContent = `BD ${upfrontGrant.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('netFinancedBalance').textContent = `BD ${startingNetDebt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      const subsidyPct = ((upfrontGrant / state.loanAmount) * 100).toFixed(1);
-      document.getElementById('subsidyPercentShare').textContent = `${subsidyPct}% covered by Government Grant`;
+      document.getElementById('cardPhase2Pay').textContent = `BD ${p2Borrower.toFixed(2)}`;
+      document.getElementById('cardPhase2Gov').textContent = `BD ${p2Gov.toFixed(2)} /mo`;
+      document.getElementById('cardPhase2TotalPmt').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
 
-      // Aggregate Metrics
-      const totalPaid = schedule.reduce((sum, r) => sum + r.payment, 0);
+      document.getElementById('cardPhase3Pay').textContent = `BD ${p3Borrower.toFixed(2)}`;
+      document.getElementById('cardPhase3Gov').textContent = `BD ${p3Gov.toFixed(2)} /mo`;
+      document.getElementById('cardPhase3TotalPmt').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
+
+      document.getElementById('totalMonthlyInstallmentBadge').textContent = `BD ${totalMonthlyPayment.toFixed(2)}`;
+
+      // Upfront Grant Banner & Financed Amount
+      document.getElementById('upfrontGrantAmount').textContent = `BD ${upfrontGrant.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`;
+      document.getElementById('netFinancedBalance').textContent = `BD ${netFinancedAmount.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`;
+      
+      const subsidyPct = ((upfrontGrant / state.totalFinance) * 100).toFixed(1);
+      document.getElementById('subsidyPercentShare').textContent = `${subsidyPct}% Covered by Gov Grant`;
+
+      // Metrics Summary
+      document.getElementById('metricTotalFinance').textContent = `BD ${state.totalFinance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('metricSlrbFee').textContent = `BD ${state.slrbFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
       const totalInterest = schedule.reduce((sum, r) => sum + r.interest, 0);
-      const totalPrincipal = schedule.reduce((sum, r) => sum + r.principal, 0);
+      const totalGovMonthly = schedule.reduce((sum, r) => sum + r.govSubsidyPmt, 0);
+      const totalGovSupport = upfrontGrant + totalGovMonthly;
 
-      document.getElementById('metricPrincipalPaid').textContent = `BD ${totalPrincipal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       document.getElementById('metricInterestPaid').textContent = `BD ${totalInterest.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('metricTotalOutflow').textContent = `BD ${totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('metricTotalGovSupport').textContent = `BD ${totalGovSupport.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
       renderTable(schedule);
-      renderChart(schedule, startingNetDebt, upfrontGrant);
+      renderChart(schedule, netFinancedAmount);
     }
 
     function renderTable(schedule) {
@@ -456,14 +576,16 @@
       if (state.viewMode === 'monthly') {
         schedule.forEach(r => {
           const tr = document.createElement('tr');
-          tr.className = 'hover:bg-slate-50 transition';
+          tr.className = 'hover:bg-slate-700/30 transition';
           tr.innerHTML = `
-            <td class="py-2.5 px-4 font-semibold text-slate-800">Month ${r.month}</td>
-            <td class="py-2.5 px-4 text-slate-600">BD ${r.begBalance.toFixed(2)}</td>
-            <td class="py-2.5 px-4 font-bold text-blue-700">BD ${r.payment.toFixed(2)}</td>
-            <td class="py-2.5 px-4 text-rose-500">BD ${r.interest.toFixed(2)}</td>
-            <td class="py-2.5 px-4 text-slate-700">BD ${r.principal.toFixed(2)}</td>
-            <td class="py-2.5 px-4 font-medium text-slate-800">BD ${r.endBalance.toFixed(2)}</td>
+            <td class="py-3 px-4 font-semibold text-white">Month ${r.month}</td>
+            <td class="py-3 px-4 text-slate-300">BD ${r.begBalance.toFixed(2)}</td>
+            <td class="py-3 px-4 font-bold text-blue-400">BD ${r.totalPmt.toFixed(2)}</td>
+            <td class="py-3 px-4 text-slate-200">BD ${r.borrowerPmt.toFixed(2)}</td>
+            <td class="py-3 px-4 text-emerald-400">BD ${r.govSubsidyPmt.toFixed(2)}</td>
+            <td class="py-3 px-4 text-rose-400">BD ${r.interest.toFixed(2)}</td>
+            <td class="py-3 px-4 text-slate-300">BD ${r.principal.toFixed(2)}</td>
+            <td class="py-3 px-4 font-medium text-white">BD ${r.endBalance.toFixed(2)}</td>
           `;
           tbody.appendChild(tr);
         });
@@ -475,26 +597,30 @@
 
           const begBalance = yearRows[0].begBalance;
           const endBalance = yearRows[yearRows.length - 1].endBalance;
-          const paymentTotal = yearRows.reduce((sum, r) => sum + r.payment, 0);
-          const interestTotal = yearRows.reduce((sum, r) => sum + r.interest, 0);
-          const principalTotal = yearRows.reduce((sum, r) => sum + r.principal, 0);
+          const totalPmtSum = yearRows.reduce((sum, r) => sum + r.totalPmt, 0);
+          const borrowerPmtSum = yearRows.reduce((sum, r) => sum + r.borrowerPmt, 0);
+          const govSubsidySum = yearRows.reduce((sum, r) => sum + r.govSubsidyPmt, 0);
+          const interestSum = yearRows.reduce((sum, r) => sum + r.interest, 0);
+          const principalSum = yearRows.reduce((sum, r) => sum + r.principal, 0);
 
           const tr = document.createElement('tr');
-          tr.className = 'hover:bg-slate-50 transition';
+          tr.className = 'hover:bg-slate-700/30 transition';
           tr.innerHTML = `
-            <td class="py-2.5 px-4 font-semibold text-slate-800">Year ${y}</td>
-            <td class="py-2.5 px-4 text-slate-600">BD ${begBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-2.5 px-4 font-bold text-blue-700">BD ${paymentTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-2.5 px-4 text-rose-500">BD ${interestTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-2.5 px-4 text-slate-700">BD ${principalTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-            <td class="py-2.5 px-4 font-medium text-slate-800">BD ${endBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 font-semibold text-white">Year ${y}</td>
+            <td class="py-3 px-4 text-slate-300">BD ${begBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 font-bold text-blue-400">BD ${totalPmtSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 text-slate-200">BD ${borrowerPmtSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 text-emerald-400">BD ${govSubsidySum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 text-rose-400">BD ${interestSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 text-slate-300">BD ${principalSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td class="py-3 px-4 font-medium text-white">BD ${endBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           `;
           tbody.appendChild(tr);
         }
       }
     }
 
-    function renderChart(schedule, startingNetDebt, upfrontGrant) {
+    function renderChart(schedule, startingNetDebt) {
       const ctx = document.getElementById('amortizationChart').getContext('2d');
       const yearlyLabels = [];
       const balanceData = [];
@@ -515,13 +641,15 @@
           labels: ['Start (M1)', ...yearlyLabels],
           datasets: [
             {
-              label: 'Remaining Net Loan Balance (BD)',
+              label: 'Remaining Bank Loan Balance (BD)',
               data: [startingNetDebt, ...balanceData],
-              borderColor: '#2563eb',
-              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.12)',
               fill: true,
-              tension: 0.25,
-              pointRadius: 2
+              tension: 0.3,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#60a5fa'
             }
           ]
         },
@@ -530,53 +658,85 @@
           maintainAspectRatio: false,
           scales: {
             y: {
-              ticks: { callback: v => `BD ${v.toLocaleString()}` },
-              grid: { color: '#f1f5f9' }
+              ticks: { 
+                color: '#94a3b8',
+                callback: v => `BD ${v.toLocaleString()}` 
+              },
+              grid: { color: 'rgba(51, 65, 85, 0.5)' }
             },
-            x: { grid: { display: false } }
+            x: { 
+              ticks: { color: '#94a3b8' },
+              grid: { display: false } 
+            }
           },
           plugins: {
             tooltip: {
+              backgroundColor: '#0f172a',
+              titleColor: '#f8fafc',
+              bodyColor: '#38bdf8',
+              borderColor: '#334155',
+              borderWidth: 1,
               callbacks: {
-                label: ctx => ` Balance: BD ${ctx.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+                label: ctx => ` Loan Balance: BD ${ctx.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
               }
             },
-            legend: { position: 'bottom' }
+            legend: { 
+              labels: { color: '#cbd5e1', font: { size: 12 } },
+              position: 'bottom'
+            }
           }
         }
       });
     }
 
     function exportToCSV() {
-      const { schedule, upfrontGrant, startingNetDebt } = buildSchedule();
-      let csv = `Upfront Government Grant: BD ${upfrontGrant.toFixed(2)}\n`;
-      csv += `Starting Net Loan Principal: BD ${startingNetDebt.toFixed(2)}\n\n`;
-      csv += 'Month,Year,Beginning Balance (BD),Payment (BD),Interest (BD),Principal Repaid (BD),Ending Balance (BD)\n';
+      const { schedule, upfrontGrant, netFinancedAmount } = calculateFinancing();
+      let csv = `Total Finance Amount: BD ${state.totalFinance.toFixed(2)}\n`;
+      csv += `Upfront Government Subsidy: BD ${upfrontGrant.toFixed(3)}\n`;
+      csv += `Bank Financed Principal: BD ${netFinancedAmount.toFixed(3)}\n`;
+      csv += `SLRB Registration Fee: BD ${state.slrbFee.toFixed(2)}\n\n`;
+      csv += 'Month,Year,Beginning Balance (BD),Total Payment (BD),Borrower Share (BD),Gov Subsidy Share (BD),Interest (BD),Principal Repaid (BD),Ending Balance (BD)\n';
 
       schedule.forEach(r => {
-        csv += `${r.month},${r.year},${r.begBalance.toFixed(2)},${r.payment.toFixed(2)},${r.interest.toFixed(2)},${r.principal.toFixed(2)},${r.endBalance.toFixed(2)}\n`;
+        csv += `${r.month},${r.year},${r.begBalance.toFixed(2)},${r.totalPmt.toFixed(2)},${r.borrowerPmt.toFixed(2)},${r.govSubsidyPmt.toFixed(2)},${r.interest.toFixed(2)},${r.principal.toFixed(2)},${r.endBalance.toFixed(2)}\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', `tasheel_lumpsum_schedule_${state.loanAmount}BD.csv`);
+      link.setAttribute('download', `tasheel_plus_schedule_${state.totalFinance}BD.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
 
-    // Input Listeners
+    // Input Synchronization & Event Listeners
+    function syncTotalFinance(val) {
+      state.totalFinance = parseFloat(val) || 0;
+      document.getElementById('totalFinanceBadge').textContent = `BD ${state.totalFinance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('totalFinanceInput').value = state.totalFinance;
+      document.getElementById('totalFinanceSlider').value = state.totalFinance;
+      
+      // Auto update SLRB fee to 1.7% if user hasn't explicitly customized it
+      const calcSlrb = state.totalFinance * 0.017;
+      document.getElementById('slrbFee').value = calcSlrb.toFixed(0);
+      state.slrbFee = calcSlrb;
+
+      updateUI();
+    }
+
     document.getElementById('salary').addEventListener('input', e => {
       state.salary = parseFloat(e.target.value) || 0;
       updateUI();
     });
 
-    document.getElementById('loanAmount').addEventListener('input', e => {
-      state.loanAmount = parseFloat(e.target.value);
-      document.getElementById('loanValueBadge').textContent = `BD ${state.loanAmount.toLocaleString()}`;
-      updateUI();
+    document.getElementById('totalFinanceInput').addEventListener('input', e => {
+      syncTotalFinance(e.target.value);
+    });
+
+    document.getElementById('totalFinanceSlider').addEventListener('input', e => {
+      syncTotalFinance(e.target.value);
     });
 
     document.getElementById('tenureYears').addEventListener('change', e => {
@@ -589,29 +749,28 @@
       updateUI();
     });
 
+    document.getElementById('slrbFee').addEventListener('input', e => {
+      state.slrbFee = parseFloat(e.target.value) || 0;
+      updateUI();
+    });
+
     document.querySelectorAll('input[name="programOption"]').forEach(elem => {
       elem.addEventListener('change', e => {
         state.option = parseInt(e.target.value);
         const opt1Label = document.getElementById('label-opt1');
         const opt2Label = document.getElementById('label-opt2');
-        const loanSlider = document.getElementById('loanAmount');
-        const maxIndicator = document.getElementById('loanMaxIndicator');
+        const maxIndicator = document.getElementById('maxCapIndicator');
 
         if (state.option === 1) {
-          opt1Label.className = 'cursor-pointer border rounded-xl p-3 flex flex-col text-left transition relative border-blue-600 bg-blue-50/50';
-          opt2Label.className = 'cursor-pointer border rounded-xl p-3 flex flex-col text-left transition relative border-slate-200 hover:border-slate-300';
-          loanSlider.max = '81000';
-          maxIndicator.textContent = 'BD 81k Cap';
-          if (state.loanAmount > 81000) {
-            state.loanAmount = 81000;
-            loanSlider.value = '81000';
-            document.getElementById('loanValueBadge').textContent = 'BD 81,000';
-          }
+          opt1Label.className = 'cursor-pointer border rounded-2xl p-3 flex flex-col text-left transition-all border-blue-500/80 bg-blue-500/10 shadow-lg shadow-blue-500/10';
+          opt2Label.className = 'cursor-pointer border rounded-2xl p-3 flex flex-col text-left transition-all border-slate-700 bg-slate-900/40 hover:border-slate-600';
+          document.getElementById('totalFinanceSlider').max = '81000';
+          maxIndicator.textContent = 'Cap: BD 81,000';
         } else {
-          opt1Label.className = 'cursor-pointer border rounded-xl p-3 flex flex-col text-left transition relative border-slate-200 hover:border-slate-300';
-          opt2Label.className = 'cursor-pointer border rounded-xl p-3 flex flex-col text-left transition relative border-blue-600 bg-blue-50/50';
-          loanSlider.max = '91000';
-          maxIndicator.textContent = 'BD 91k Cap';
+          opt1Label.className = 'cursor-pointer border rounded-2xl p-3 flex flex-col text-left transition-all border-slate-700 bg-slate-900/40 hover:border-slate-600';
+          opt2Label.className = 'cursor-pointer border rounded-2xl p-3 flex flex-col text-left transition-all border-blue-500/80 bg-blue-500/10 shadow-lg shadow-blue-500/10';
+          document.getElementById('totalFinanceSlider').max = '91000';
+          maxIndicator.textContent = 'Cap: BD 91,000';
         }
         updateUI();
       });
@@ -619,20 +778,42 @@
 
     document.getElementById('viewAnnualBtn').addEventListener('click', () => {
       state.viewMode = 'annual';
-      document.getElementById('viewAnnualBtn').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-700 transition';
-      document.getElementById('viewMonthlyBtn').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-100 transition';
+      document.getElementById('viewAnnualBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition';
+      document.getElementById('viewMonthlyBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition';
       updateUI();
     });
 
     document.getElementById('viewMonthlyBtn').addEventListener('click', () => {
       state.viewMode = 'monthly';
-      document.getElementById('viewMonthlyBtn').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-700 transition';
-      document.getElementById('viewAnnualBtn').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-100 transition';
+      document.getElementById('viewMonthlyBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white shadow-md transition';
+      document.getElementById('viewAnnualBtn').className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-300 hover:bg-slate-700 transition';
       updateUI();
     });
 
     document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
 
+    // Preset button to reset to user's exact example
+    document.getElementById('btnLoadExample').addEventListener('click', () => {
+      state.salary = 915;
+      state.option = 2;
+      state.totalFinance = 69356.21;
+      state.tenureYears = 30;
+      state.interestRate = 6.10;
+      state.slrbFee = 1190;
+
+      document.getElementById('salary').value = 915;
+      document.querySelectorAll('input[name="programOption"]')[1].checked = true;
+      document.getElementById('totalFinanceInput').value = 69356.21;
+      document.getElementById('totalFinanceSlider').value = 69356.21;
+      document.getElementById('totalFinanceBadge').textContent = 'BD 69,356.21';
+      document.getElementById('tenureYears').value = 30;
+      document.getElementById('interestRate').value = 6.10;
+      document.getElementById('slrbFee').value = 1190;
+
+      updateUI();
+    });
+
+    // Initialize icons and UI on load
     lucide.createIcons();
     updateUI();
   </script>
