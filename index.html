@@ -53,7 +53,7 @@
           class="flex items-center space-x-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95"
         >
           <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
-          <span>Load Example (BD 915 Salary)</span>
+          <span>Load Example (BD 600 Salary)</span>
         </button>
       </div>
     </header>
@@ -81,7 +81,7 @@
               <input
                 id="salary"
                 type="number"
-                value="915"
+                value="600"
                 step="5"
                 min="600"
                 max="2500"
@@ -120,7 +120,7 @@
                 Total Finance Amount
               </label>
               <span id="totalFinanceBadge" class="text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-lg border border-blue-500/20">
-                BD 69,356.21
+                BD 63,000.00
               </span>
             </div>
             <div class="relative mb-2">
@@ -131,7 +131,7 @@
                 step="0.010"
                 min="57000"
                 max="91000"
-                value="69356.210"
+                value="63000.00"
                 class="w-full pl-12 pr-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               />
             </div>
@@ -141,7 +141,7 @@
               min="57000"
               max="91000"
               step="100"
-              value="69356.21"
+              value="63000"
               class="w-full accent-blue-500 cursor-pointer"
             />
             <div class="flex justify-between text-[11px] text-slate-400 mt-1">
@@ -189,14 +189,14 @@
               <label for="slrbFee" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                 SLRB Registration Fee
               </label>
-              <span class="text-[11px] text-slate-400">WIP</span>
+              <span class="text-[11px] text-slate-400">Fixed / Calculated</span>
             </div>
             <div class="relative">
               <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold text-sm">BD</span>
               <input
                 id="slrbFee"
                 type="number"
-                value="1190"
+                value="1200"
                 step="10"
                 min="0"
                 class="w-full pl-12 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-slate-200 font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none transition text-sm"
@@ -220,7 +220,7 @@
                 <span>Government Upfront Lump-Sum Subsidy</span>
               </div>
               <div class="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono" id="upfrontGrantAmount">
-                BD 16,509.221
+                BD 28,346.236
               </div>
               <p class="text-xs sm:text-sm text-emerald-100/90 mt-2 max-w-lg leading-relaxed">
                 Direct lump-sum grant paid upfront by the Ministry to your financing bank at disbursement to reduce your property purchase price.
@@ -230,10 +230,10 @@
             <div class="w-full md:w-auto bg-slate-900/80 backdrop-blur-md rounded-2xl p-5 border border-white/10 text-left md:text-right flex-shrink-0 shadow-inner">
               <span class="text-xs font-medium text-slate-400 block uppercase tracking-wider">Bank Financed Principal</span>
               <span class="text-2xl sm:text-3xl font-extrabold text-white font-mono block mt-1" id="netFinancedBalance">
-                BD 52,846.989
+                BD 34,653.764
               </span>
               <span class="inline-block mt-2 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300 bg-emerald-500/20 rounded-full border border-emerald-400/20" id="subsidyPercentShare">
-                23.8% Covered by Gov Grant
+                45.0% Covered by Gov Grant
               </span>
             </div>
           </div>
@@ -247,7 +247,7 @@
               <p class="text-xs text-slate-400">Monthly installment paid by applicant vs. Ministry monthly subsidy</p>
             </div>
             <span class="self-start sm:self-auto text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              Total Installment to Bank: <strong id="totalMonthlyInstallmentBadge" class="text-white font-mono">BD 320.25</strong>/mo
+              Total Installment to Bank: <strong id="totalMonthlyInstallmentBadge" class="text-white font-mono">BD 210.00</strong>/mo
             </span>
           </div>
 
@@ -260,18 +260,18 @@
                   <span id="rateLabel1" class="text-[11px] bg-blue-500/20 text-blue-300 font-bold px-2 py-0.5 rounded-md border border-blue-400/20">25% Salary</span>
                 </div>
                 <div class="mt-3">
-                  <div class="text-2xl font-black text-white font-mono" id="cardPhase1Pay">BD 228.75</div>
+                  <div class="text-2xl font-black text-white font-mono" id="cardPhase1Pay">BD 150.00</div>
                   <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
                 </div>
               </div>
               <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
                 <div class="flex justify-between text-emerald-400">
                   <span>Gov Subsidy:</span>
-                  <span id="cardPhase1Gov" class="font-bold">BD 91.50 /mo</span>
+                  <span id="cardPhase1Gov" class="font-bold">BD 60.00 /mo</span>
                 </div>
                 <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
                   <span>Total to Bank:</span>
-                  <span id="cardPhase1TotalPmt" class="font-mono">BD 320.25</span>
+                  <span id="cardPhase1TotalPmt" class="font-mono">BD 210.00</span>
                 </div>
               </div>
             </div>
@@ -284,18 +284,18 @@
                   <span id="rateLabel2" class="text-[11px] bg-indigo-500/20 text-indigo-300 font-bold px-2 py-0.5 rounded-md border border-indigo-400/20">30% Salary</span>
                 </div>
                 <div class="mt-3">
-                  <div class="text-2xl font-black text-white font-mono" id="cardPhase2Pay">BD 274.50</div>
+                  <div class="text-2xl font-black text-white font-mono" id="cardPhase2Pay">BD 180.00</div>
                   <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
                 </div>
               </div>
               <div class="mt-4 pt-3 border-t border-slate-700/60 text-[11px] space-y-1">
                 <div class="flex justify-between text-emerald-400">
                   <span>Gov Subsidy:</span>
-                  <span id="cardPhase2Gov" class="font-bold">BD 45.75 /mo</span>
+                  <span id="cardPhase2Gov" class="font-bold">BD 30.00 /mo</span>
                 </div>
                 <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
                   <span>Total to Bank:</span>
-                  <span id="cardPhase2TotalPmt" class="font-mono">BD 320.25</span>
+                  <span id="cardPhase2TotalPmt" class="font-mono">BD 210.00</span>
                 </div>
               </div>
             </div>
@@ -308,7 +308,7 @@
                   <span id="rateLabel3" class="text-[11px] bg-purple-500/20 text-purple-300 font-bold px-2 py-0.5 rounded-md border border-purple-400/20">35% Salary</span>
                 </div>
                 <div class="mt-3">
-                  <div class="text-2xl font-black text-white font-mono" id="cardPhase3Pay">BD 320.25</div>
+                  <div class="text-2xl font-black text-white font-mono" id="cardPhase3Pay">BD 210.00</div>
                   <div class="text-[11px] text-slate-400 mt-0.5">Your monthly payment</div>
                 </div>
               </div>
@@ -319,7 +319,7 @@
                 </div>
                 <div class="flex justify-between text-slate-300 pt-1 font-semibold border-t border-slate-800">
                   <span>Total to Bank:</span>
-                  <span id="cardPhase3TotalPmt" class="font-mono">BD 320.25</span>
+                  <span id="cardPhase3TotalPmt" class="font-mono">BD 210.00</span>
                 </div>
               </div>
             </div>
@@ -329,19 +329,19 @@
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-700/60">
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
               <span class="text-[11px] text-slate-400 font-semibold block">Total Property Finance</span>
-              <span class="text-sm font-bold text-white font-mono mt-0.5 block" id="metricTotalFinance">BD 69,356.21</span>
+              <span class="text-sm font-bold text-white font-mono mt-0.5 block" id="metricTotalFinance">BD 63,000.00</span>
             </div>
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
               <span class="text-[11px] text-slate-400 font-semibold block">SLRB Registration Fee</span>
-              <span class="text-sm font-bold text-amber-400 font-mono mt-0.5 block" id="metricSlrbFee">BD 1,190.00</span>
+              <span class="text-sm font-bold text-amber-400 font-mono mt-0.5 block" id="metricSlrbFee">BD 1,200.00</span>
             </div>
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
               <span class="text-[11px] text-slate-400 font-semibold block">Total Bank Interest Paid</span>
-              <span class="text-sm font-bold text-rose-400 font-mono mt-0.5 block" id="metricInterestPaid">BD 62,443.01</span>
+              <span class="text-sm font-bold text-rose-400 font-mono mt-0.5 block" id="metricInterestPaid">BD 40,946.24</span>
             </div>
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/40">
               <span class="text-[11px] text-slate-400 font-semibold block">Total Gov Support</span>
-              <span class="text-sm font-bold text-emerald-400 font-mono mt-0.5 block" id="metricTotalGovSupport">BD 24,744.22</span>
+              <span class="text-sm font-bold text-emerald-400 font-mono mt-0.5 block" id="metricTotalGovSupport">BD 33,746.24</span>
             </div>
           </div>
         </div>
@@ -415,14 +415,14 @@
   </div>
 
   <script>
-    // App State initialized with verified standard example values
+    // App State initialized with BD 600 salary example values
     let state = {
-      salary: 915,
+      salary: 600,
       option: 2,
-      totalFinance: 69356.21,
+      totalFinance: 63000,
       tenureYears: 30,
       interestRate: 6.10,
-      slrbFee: 1190,
+      slrbFee: 1200,
       viewMode: 'annual'
     };
 
@@ -718,11 +718,6 @@
       document.getElementById('totalFinanceInput').value = state.totalFinance;
       document.getElementById('totalFinanceSlider').value = state.totalFinance;
       
-      // Auto update SLRB fee to 1.7% if user hasn't explicitly customized it
-      const calcSlrb = state.totalFinance * 0.017;
-      document.getElementById('slrbFee').value = calcSlrb.toFixed(0);
-      state.slrbFee = calcSlrb;
-
       updateUI();
     }
 
@@ -792,23 +787,23 @@
 
     document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
 
-    // Preset button to reset to user's exact example
+    // Preset button to reset to BD 600 example
     document.getElementById('btnLoadExample').addEventListener('click', () => {
-      state.salary = 915;
+      state.salary = 600;
       state.option = 2;
-      state.totalFinance = 69356.21;
+      state.totalFinance = 63000;
       state.tenureYears = 30;
       state.interestRate = 6.10;
-      state.slrbFee = 1190;
+      state.slrbFee = 1200;
 
-      document.getElementById('salary').value = 915;
+      document.getElementById('salary').value = 600;
       document.querySelectorAll('input[name="programOption"]')[1].checked = true;
-      document.getElementById('totalFinanceInput').value = 69356.21;
-      document.getElementById('totalFinanceSlider').value = 69356.21;
-      document.getElementById('totalFinanceBadge').textContent = 'BD 69,356.21';
+      document.getElementById('totalFinanceInput').value = 63000;
+      document.getElementById('totalFinanceSlider').value = 63000;
+      document.getElementById('totalFinanceBadge').textContent = 'BD 63,000.00';
       document.getElementById('tenureYears').value = 30;
       document.getElementById('interestRate').value = 6.10;
-      document.getElementById('slrbFee').value = 1190;
+      document.getElementById('slrbFee').value = 1200;
 
       updateUI();
     });
